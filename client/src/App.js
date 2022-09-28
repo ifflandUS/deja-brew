@@ -24,10 +24,7 @@ function App() {
               <li className="nav-item">
                 <Link to ="/" className='nav-link'>Home</Link>
               </li>
-
-              <li className="nav-item">
-                <Link to="/brewery-search" className='nav-link'>Brewery Search</Link>
-              </li>
+              <li className="nav-item"><Link to="/BrewerySearch" className='nav-link'>Brewery Search</Link></li>
               <li className="nav-item">
                 <Link to="/Profile" className='nav-link'>Profile</Link>
               </li>
@@ -36,11 +33,10 @@ function App() {
         </nav>
         <div className='container'>
           <Switch>
-            <Route path="/"><Home/></Route>
-            <Route path="/brewery-search"><BrewerySearch/></Route>
-            <Route path={'/brewery/:breweryId'}><Brewery/></Route>
+            <Route exact path="/"><Home/></Route>
+            <Route path="/BrewerySearch"><BrewerySearch/></Route>
             <Route exact path="/error"><ServerError/></Route>
-            <Route path="/profile"><Profile/></Route>
+            <Route exact path="/profile"><Profile/></Route>
             <Route path="*"><NotFound/></Route>
           </Switch>
         </div>
