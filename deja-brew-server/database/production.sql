@@ -25,3 +25,24 @@ create table beer_brewery (
             foreign key (beer_id)
             references beer(beer_id),
 );
+
+create table visit (
+    visit_id int primary key auto_increment,
+    id int not null,
+    brewery_id varchar(100) not null,
+    visit_date date not null,
+    constraint fk_visit_app_user_id
+        foreign key(id)
+        references app_user(id)
+)
+
+create table review(
+    review_id int primary key auto_increment,
+    id int not null,
+    brewery_id varchar(100) not null,
+    rating int not null,
+    review varchar(1000) not null,
+    constraint fk_review_app_user_id
+            foreign key(id)
+            references app_user(id)
+)

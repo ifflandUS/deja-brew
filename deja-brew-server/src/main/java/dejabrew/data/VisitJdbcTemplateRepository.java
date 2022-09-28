@@ -14,16 +14,17 @@ import java.sql.PreparedStatement;
 import java.sql.Statement;
 
 @Repository
-public class VisitJdbcTemplateRepository {
+public class VisitJdbcTemplateRepository implements VisitRepository {
     private final JdbcTemplate jdbcTemplate;
 
     public VisitJdbcTemplateRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    @Override
     public Visit findById(int visitId) {
 
-        final String sql = "select visit_id, user_id, brewery_id, date "
+        final String sql = "select visit_id, user_id, brewery_id, visit_date "
                 + "from visit "
                 + "where visit_id = ?;";
 
@@ -32,6 +33,7 @@ public class VisitJdbcTemplateRepository {
                 .orElse(null);
     }
 
+    @Override
     public Review findByBrewery(Brewery brewery) {
         final String sql = "select brewery_id "
                 + "from visit "
@@ -43,9 +45,10 @@ public class VisitJdbcTemplateRepository {
     }
 
 
+    @Override
     public Visit add(Visit visit) {
 
-        final String sql = "insert into visit (user_id, brewery_id, date) "
+        final String sql = "insert into visit (user_id, brewery_id, visit_date) "
                 + " values (?,?,?,?);";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -65,12 +68,13 @@ public class VisitJdbcTemplateRepository {
         return visit;
     }
 
+    @Override
     public boolean update(Visit visit) {
 
         final String sql = "update visit set "
                 + "user_id = ?, "
                 + "brewery_id = ?, "
-                + "date"
+                + "visit_date"
                 + "where visit_id = ?;";
 
         return jdbcTemplate.update(sql,
@@ -81,6 +85,7 @@ public class VisitJdbcTemplateRepository {
     }
 
 
+    @Override
     public boolean deleteById(int visitId) {
         return jdbcTemplate.update(
                 "delete from visit where visit_id = ?", visitId) > 0;
