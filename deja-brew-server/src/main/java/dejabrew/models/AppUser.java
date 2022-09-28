@@ -1,5 +1,6 @@
 package dejabrew.models;
 
+import dejabrew.App;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -15,7 +16,6 @@ public class AppUser extends User {
     private static String AUTHORITY_PREFIX = "ROLE_";
 
     private int appUserId;
-
 
     public AppUser(int appUserId, String username, String passwordHash, boolean disabled, List<String> roles) {
         super(username, passwordHash, !disabled, true, true, true, convertRolesToAuthorities(roles) );

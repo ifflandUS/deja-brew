@@ -1,4 +1,4 @@
-package dejabrew.data.Mappers;
+package dejabrew.data.mappers;
 
 import dejabrew.models.Review;
 import org.springframework.jdbc.core.RowMapper;
