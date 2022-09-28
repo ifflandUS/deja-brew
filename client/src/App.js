@@ -36,8 +36,8 @@ function App() {
             <Route exact path="/"><Home/></Route>
             <Route path="/BrewerySearch"><BrewerySearch/></Route>
             <Route exact path="/error"><ServerError/></Route>
-            <Route exact path="/profile"><Profile/></Route>
-            <Route path="*"><NotFound/></Route>
+            <Route path="/Profile"><Profile/></Route>
+        
           </Switch>
         </div>
 
