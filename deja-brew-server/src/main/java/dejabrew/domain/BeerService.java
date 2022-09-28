@@ -21,10 +21,13 @@ public class BeerService {
     public Result<Beer> addBeer(Beer beer){
         Result<Beer> result = validate(beer);
         if(result.isSuccess()){
-            for (Beer prevBeer : repository.findBeersByBrewery(beer.getBreweryId())){
-                if(prevBeer.equalsMinusId(beer)){
-                    result.addMessage("Beer already exists for this brewery", ResultType.INVALID);
-                    return result;
+            List<Beer> beers = repository.findBeersByBrewery(beer.getBreweryId());
+            if (beers != null) {
+                for (Beer prevBeer : beers) {
+                    if (prevBeer.equalsMinusId(beer)) {
+                        result.addMessage("Beer already exists for this brewery", ResultType.INVALID);
+                        return result;
+                    }
                 }
             }
             if (beer.getBeerId() > 0){
