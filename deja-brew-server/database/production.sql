@@ -12,16 +12,6 @@ create table beer (
     beer_id int primary key auto_increment,
     beer_name varchar(50) not null,
     abv decimal(3,1) not null,
-    type varchar(30) not null
-);
-
-create table beer_brewery (
-    beer_id int not null,
-    brewery_id varchar(100) not null,
-    count int not null default(0),
-    constraint pk_beer_brewery
-            primary key (beer_id, brewery_id),
-        constraint fk_beer_brewery_beer_id
-            foreign key (beer_id)
-            references beer(beer_id),
+    type varchar(30) not null,
+    brewery_id varchar(100)
 );

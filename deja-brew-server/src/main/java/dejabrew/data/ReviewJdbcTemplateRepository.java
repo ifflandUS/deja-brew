@@ -1,7 +1,7 @@
 package dejabrew.data;
 
 
-import dejabrew.data.Mappers.ReviewMapper;
+import dejabrew.data.mappers.ReviewMapper;
 import dejabrew.models.Review;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
