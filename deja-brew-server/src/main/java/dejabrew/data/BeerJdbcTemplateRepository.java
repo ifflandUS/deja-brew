@@ -21,7 +21,7 @@ public class BeerJdbcTemplateRepository implements BeerRepository{
     }
 
     @Override
-    public List<Beer> getBeersByBrewery(String breweryId) {
+    public List<Beer> findBeersByBrewery(String breweryId) {
         final String sql = "select beer_id, beer_name, abv, type, brewery_id " +
                 "from beer " +
                 "where brewery_id = ?;";

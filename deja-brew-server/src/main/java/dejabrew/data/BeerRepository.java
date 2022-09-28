@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface BeerRepository {
 
-    List<Beer> getBeersByBrewery(String brewery_id);
+    List<Beer> findBeersByBrewery(String brewery_id);
 
 
     Beer addBeer(Beer beer);
