@@ -32,16 +32,16 @@ public class VisitJdbcTemplateRepository implements VisitRepository {
                 .orElse(null);
     }
 
-    @Override
-    public Review findByBrewery(Brewery brewery) {
-        final String sql = "select brewery_id "
-                + "from visit "
-                + "where visit_id = ?;";
-
-        return jdbcTemplate.query(sql, new VisitMapper(), brewery).stream()
-                .findFirst()
-                .orElse(null);
-    }
+//    @Override
+//    public Review findByBrewery(Brewery brewery) {
+//        final String sql = "select brewery_id "
+//                + "from visit "
+//                + "where visit_id = ?;";
+//
+//        return jdbcTemplate.query(sql, new VisitMapper(), brewery).stream()
+//                .findFirst()
+//                .orElse(null);
+//    }
 
 
     @Override

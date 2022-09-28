@@ -33,28 +33,28 @@ public class ReviewJdbcTemplateRepository implements ReviewRepository {
     }
 
 
-    @Override
-    public Review findByBrewery(Brewery breweryId) {
-        final String sql = "select brewery_id"
-                + "from review "
-                + "where review_id = ?;";
+//    @Override
+//    public Review findByBrewery(Brewery breweryId) {
+//        final String sql = "select brewery_id"
+//                + "from review "
+//                + "where review_id = ?;";
+//
+//        return jdbcTemplate.query(sql, new ReviewMapper(), breweryId).stream()
+//                .findFirst()
+//                .orElse(null);
+//    }
 
-        return jdbcTemplate.query(sql, new ReviewMapper(), breweryId).stream()
-                .findFirst()
-                .orElse(null);
-    }
 
-
-    @Override
-    public Review findByUser(User user) {
-        final String sql = "select user_id"
-                + "from review "
-                + "where review_id = ?;";
-
-        return jdbcTemplate.query(sql, new ReviewMapper(), user).stream()
-                .findFirst()
-                .orElse(null);
-    }
+//    @Override
+//    public Review findByUser(User user) {
+//        final String sql = "select user_id"
+//                + "from review "
+//                + "where review_id = ?;";
+//
+//        return jdbcTemplate.query(sql, new ReviewMapper(), user).stream()
+//                .findFirst()
+//                .orElse(null);
+//    }
 
     @Override
     public Review add(Review review) {

@@ -5,9 +5,9 @@ import dejabrew.models.Review;
 public interface ReviewRepository {
     Review findById(int reviewId);
 
-    Review findByBrewery(Brewery brewery);
-
-    Review findByUser(User user);
+//    Review findByBrewery(Brewery brewery);
+//
+//    Review findByUser(User user);
 
     Review add(Review review);
 

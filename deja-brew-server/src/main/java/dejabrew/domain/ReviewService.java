@@ -17,13 +17,13 @@ public class ReviewService {
         return repository.findById(reviewId);
     }
 
-    public Review findByBrewery(Brewery brewery) {
-        return repository.findByBrewery(brewery);
-    }
-
-    public Review findByUser(User user) {
-        return repository.findByUser(user);
-    }
+//    public Review findByBrewery(Brewery brewery) {
+//        return repository.findByBrewery(brewery);
+//    }
+//
+//    public Review findByUser(User user) {
+//        return repository.findByUser(user);
+//    }
 
     public Result<Review> add(Review review) {
         Result<Review> result = validate(review);

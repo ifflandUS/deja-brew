@@ -15,9 +15,9 @@ public class VisitService {
         return repository.findById(visitId);
     }
 
-    public Visit findByBrewery(Brewery brewery) {
-        return repository.findByBrewery(brewery);
-    }
+//    public Visit findByBrewery(Brewery brewery) {
+//        return repository.findByBrewery(brewery);
+//    }
 
     public Result<Visit> add(Visit visit) {
         Result<Visit> result = validate(visit);
@@ -58,5 +58,18 @@ public class VisitService {
         return repository.deleteById(visitId);
     }
 
-
+    private Result<Visit> validate(Visit visit) {
+        Result<Visit> result = new Result<>();
+        if (visit == null) {
+            result.addMessage("visit cannot be null", ResultType.INVALID);
+            return result;
+        }
+        if (visit.getBreweryId() <= 0) {
+            result.addMessage("brewery is required", ResultType.INVALID);
+        }
+        if (visit.getUserId() == 0) {
+            result.addMessage("user is required", ResultType.INVALID);
+        }
+        return result;
+    }
 }

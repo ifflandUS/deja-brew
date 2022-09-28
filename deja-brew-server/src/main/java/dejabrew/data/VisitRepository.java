@@ -6,7 +6,7 @@ import dejabrew.models.Visit;
 public interface VisitRepository {
     Visit findById(int visitId);
 
-    Review findByBrewery(Brewery brewery);
+//    Review findByBrewery(Brewery brewery);
 
     Visit add(Visit visit);
 
