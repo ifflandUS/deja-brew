@@ -54,7 +54,7 @@ public class VisitJdbcTemplateRepository implements VisitRepository {
         int rowsAffected = jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             ps.setInt(1, visit.getUserId());
-            ps.setInt(2, visit.getBreweryId());
+            ps.setString(2, visit.getBreweryId());
             ps.setDate(3, visit.getDate() == null ? null : Date.valueOf(visit.getDate()));;
 
             return ps;

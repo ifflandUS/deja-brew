@@ -10,7 +10,7 @@ public class Visit {
     private int userId;
 
 
-    private int breweryId;
+    private String breweryId;
 
 
     private LocalDate date;
@@ -19,7 +19,7 @@ public class Visit {
 
     }
 
-    public Visit(int visitId, int userId, int breweryId, LocalDate date) {
+    public Visit(int visitId, int userId, String breweryId, LocalDate date) {
         this.visitId = visitId;
         this.userId = userId;
         this.breweryId = breweryId;
@@ -42,11 +42,11 @@ public class Visit {
         this.userId = userId;
     }
 
-    public int getBreweryId() {
+    public String getBreweryId() {
         return breweryId;
     }
 
-    public void setBreweryId(int breweryId) {
+    public void setBreweryId(String breweryId) {
         this.breweryId = breweryId;
     }
 

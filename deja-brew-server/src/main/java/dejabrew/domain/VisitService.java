@@ -64,7 +64,7 @@ public class VisitService {
             result.addMessage("visit cannot be null", ResultType.INVALID);
             return result;
         }
-        if (visit.getBreweryId() <= 0) {
+        if (visit.getBreweryId().isBlank() || visit.getBreweryId().isEmpty()) {
             result.addMessage("brewery is required", ResultType.INVALID);
         }
         if (visit.getUserId() == 0) {

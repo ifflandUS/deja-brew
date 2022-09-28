@@ -6,7 +6,7 @@ public class Review {
     private int reviewId;
     private int userId;
 
-    private int breweryId;
+    private String breweryId;
 
     private int rating;
 
@@ -18,7 +18,7 @@ public class Review {
     public Review() {
 
     }
-    public Review(int reviewId, int userId, int breweryId, int rating, String review) {
+    public Review(int reviewId, int userId, String breweryId, int rating, String review) {
         this.reviewId = reviewId;
         this.userId = userId;
         this.breweryId = breweryId;
@@ -41,11 +41,11 @@ public class Review {
         this.userId = userId;
     }
 
-    public int getBreweryId() {
+    public String getBreweryId() {
         return breweryId;
     }
 
-    public void setBreweryId(int breweryId) {
+    public void setBreweryId(String breweryId) {
         this.breweryId = breweryId;
     }
 

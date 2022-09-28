@@ -11,7 +11,7 @@ public class ReviewMapper implements RowMapper<Review> {
         Review review = new Review();
         review.setReviewId(resultSet.getInt("review_id"));
         review.setUserId(resultSet.getInt("user_id"));
-        review.setBreweryId(resultSet.getInt("brewery_id"));
+        review.setBreweryId(resultSet.getString("brewery_id"));
         review.setRating(resultSet.getInt("rating"));
         review.setReview(resultSet.getString("review"));
         return review;

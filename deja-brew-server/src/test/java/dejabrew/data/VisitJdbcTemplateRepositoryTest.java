@@ -13,7 +13,7 @@ import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
+@SpringBootTest
 class VisitJdbcTemplateRepositoryTest {
 
     final static int NEXT_VISIT_ID = 5;
@@ -62,7 +62,7 @@ class VisitJdbcTemplateRepositoryTest {
     Visit makeVisit() {
         Visit visit = new Visit();
         visit.setUserId(5);
-        visit.setBreweryId(5);
+        visit.setBreweryId("10-56-brewing-company-knox");
         visit.setDate(LocalDate.of(2022,9,13));
         return visit;
     }

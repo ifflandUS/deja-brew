@@ -11,7 +11,7 @@ public class VisitMapper implements RowMapper<Visit> {
         Visit visit = new Visit();
         visit.setVisitId(resultSet.getInt("visit_id"));
         visit.setUserId(resultSet.getInt("user_id"));
-        visit.setBreweryId(resultSet.getInt("brewery_id"));
+        visit.setBreweryId(resultSet.getString("brewery_id"));
         if (resultSet.getDate("date") != null) {
             visit.setDate(resultSet.getDate("date").toLocalDate());
         }

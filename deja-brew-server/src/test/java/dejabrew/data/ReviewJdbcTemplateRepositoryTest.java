@@ -10,7 +10,7 @@ import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
+@SpringBootTest
 class ReviewJdbcTemplateRepositoryTest {
 
     final static int NEXT_REVIEW_ID = 5;
@@ -59,7 +59,7 @@ class ReviewJdbcTemplateRepositoryTest {
     Review makeReview() {
         Review review = new Review();
         review.setUserId(5);
-        review.setBreweryId(5);
+        review.setBreweryId("10-56-brewing-company-knox");
         review.setRating(4);
         review.setReview("Test");
         return review;

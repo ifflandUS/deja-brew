@@ -66,7 +66,7 @@ public class ReviewJdbcTemplateRepository implements ReviewRepository {
         int rowsAffected = jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             ps.setInt(1, review.getUserId());
-            ps.setInt(2, review.getBreweryId());
+            ps.setString(2, review.getBreweryId());
             ps.setInt(3, review.getRating());
             ps.setString(4, review.getReview());
             return ps;

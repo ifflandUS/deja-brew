@@ -70,7 +70,7 @@ public class ReviewService {
             result.addMessage("review cannot be null", ResultType.INVALID);
             return result;
         }
-        if (review.getBreweryId() <= 0) {
+        if (review.getBreweryId().isEmpty() || review.getBreweryId().isBlank()) {
             result.addMessage("brewery is required", ResultType.INVALID);
         }
         if (review.getUserId() == 0) {
