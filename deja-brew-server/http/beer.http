@@ -1,0 +1,44 @@
+@JWT_TOKEN =eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJidWctc2FmYXJpIiwic3ViIjoiY21hbiIsImF1dGhvcml0aWVzIjoiUk9MRV9VU0VSIiwiZXhwIjoxNjY0NDEzNzIwfQ.zQAnOMxt3qA4A0FcKVQx9DodDB190Y2i3ErOr73FYsc
+
+###
+POST http://localhost:8080/authenticate HTTP/1.1
+Content-Type: application/json
+
+{
+    "username": "cman",
+    "password": "P@ssw0rd!"
+}
+
+###
+POST http://localhost:8080/beer HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{JWT_TOKEN}}
+
+{
+    "beerName": "Modelo",
+    "abv": "4.0",
+    "type": "Mexican Lager",
+    "breweryId": "madtree-brewing-cincinnati"
+}
+
+###
+GET http://localhost:8080/beer/madtree-brewing-cincinnati HTTP/1.1
+
+
+
+###
+PUT http://localhost:8080/beer/1 HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{JWT_TOKEN}}
+
+{
+    "beerId": "1",
+    "beerName": "Pacifico",
+    "abv": "4.2",
+    "type": "Mexican Lager",
+    "breweryId": "madtree-brewing-cincinnati"
+}
+
+###
+DELETE http://localhost:8080/beer/2 HTTP/1.1
+Authorization: Bearer {{JWT_TOKEN}}

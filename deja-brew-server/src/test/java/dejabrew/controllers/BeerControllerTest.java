@@ -15,7 +15,8 @@ import org.springframework.test.web.servlet.RequestBuilder;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
@@ -66,6 +67,98 @@ class BeerControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().json(response));
     }
+
+    @Test
+    void shouldReturn409WhenUpdatedWithMismatchIds() throws Exception {
+
+        Beer beer = new Beer(1,"beer", 4.2, "American Lager", "cool-brewery-co" );
+
+        String update = jsonMapper(beer);
+
+        RequestBuilder requestBuilder = put("/beer/3")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(update)
+                .with(user("admin").roles("USER","ADMIN"));
+
+        mvc.perform(requestBuilder)
+                .andExpect(status().isConflict());
+    }
+
+    @Test
+    void shouldReturn400WhenUpdatedWithMissingInfo() throws Exception {
+
+        Beer beer = new Beer();
+        beer.setBeerId(3);
+
+        String update = jsonMapper(beer);
+
+        RequestBuilder requestBuilder = put("/beer/3")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(update)
+                .with(user("admin").roles("USER","ADMIN"));
+
+        mvc.perform(requestBuilder)
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void shouldReturn404WhenUpdatedWithMissingId() throws Exception {
+
+        Beer beer = new Beer(6,"beer", 4.2, "American Lager", "cool-brewery-co" );
+
+        String update = jsonMapper(beer);
+
+        Mockito.when(repository.findBeersById(beer.getBeerId())).thenReturn(null);
+
+        RequestBuilder requestBuilder = put("/beer/6")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(update)
+                .with(user("admin").roles("USER","ADMIN"));
+
+        mvc.perform(requestBuilder)
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void shouldReturn200WhenUpdated() throws Exception {
+        Beer beer = new Beer(6,"beer", 4.2, "American Lager", "cool-brewery-co" );
+        Beer createdBeer = new Beer(6,"beer 3", 4.2, "American Eagle Lager", "cool-brewery-co" );
+
+        String update = jsonMapper(createdBeer);
+
+        Mockito.when(repository.findBeersById(beer.getBeerId())).thenReturn(beer);
+        Mockito.when(repository.updateBeer(createdBeer)).thenReturn(true);
+
+        RequestBuilder requestBuilder = put("/beer/6")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(update)
+                .with(user("admin").roles("USER","ADMIN"));
+
+        mvc.perform(requestBuilder)
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().json(update))
+        ;
+    }
+
+    @Test
+    void shouldReturn404WhenDeleteNotFound() throws Exception {
+        Mockito.when(repository.deleteBeer(5)).thenReturn(false);
+
+        mvc.perform(delete("/beer/5").with(user("admin").roles("USER","ADMIN")))
+                .andExpect(status().isNotFound());
+    }
+
+
+    @Test
+    void shouldReturn200WhenDeleted() throws Exception {
+        Mockito.when(repository.deleteBeer(1)).thenReturn(true);
+
+        mvc.perform(delete("/beer/1").with(user("admin").roles("USER","ADMIN")))
+                .andExpect(status().isOk());
+    }
+
+
 
     private String jsonMapper(Object input ) throws Exception{
         JsonMapper mapper = new JsonMapper();
