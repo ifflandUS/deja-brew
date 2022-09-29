@@ -1,7 +1,6 @@
 package dejabrew.data;
 
 import dejabrew.data.mappers.VisitMapper;
-import dejabrew.models.Review;
 import dejabrew.models.Visit;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;

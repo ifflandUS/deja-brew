@@ -1,7 +1,6 @@
 package dejabrew.domain;
 
 import dejabrew.data.VisitRepository;
-import dejabrew.models.Review;
 import dejabrew.models.Visit;
 
 public class VisitService {

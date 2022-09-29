@@ -1,6 +1,5 @@
 package dejabrew.security;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,14 +22,22 @@ public class JwtRequestFilter extends BasicAuthenticationFilter {
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
+    protected void doFilterInternal(HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    FilterChain chain) throws IOException, ServletException {
+
         String authorization = request.getHeader("Authorization");
         if (authorization != null && authorization.startsWith("Bearer ")) {
-            User user = converter.getUserFromToken(authorization.substring("Bearer ".length()));
+
+            User user = converter.getUserFromToken(authorization);
             if (user == null) {
-                response.setStatus( HttpStatus.FORBIDDEN.value() );
+                response.setStatus(403); // Forbidden
             } else {
-                SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities()));
+
+                UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
+                        user.getUsername(), null, user.getAuthorities());
+
+                SecurityContextHolder.getContext().setAuthentication(token);
             }
         }
 

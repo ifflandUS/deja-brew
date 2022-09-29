@@ -11,6 +11,13 @@ public class Beer {
 
     public Beer(){}
 
+    public Beer(int beerId, String beerName, double abv, String type, String breweryId) {
+        this.beerId = beerId;
+        this.beerName = beerName;
+        this.abv = abv;
+        this.type = type;
+        this.breweryId = breweryId;
+    }
     public Beer(String beerName, double abv, String type, String breweryId) {
         this.beerName = beerName;
         this.abv = abv;
@@ -64,6 +71,13 @@ public class Beer {
         if (o == null || getClass() != o.getClass()) return false;
         Beer beer = (Beer) o;
         return beerId == beer.beerId && Double.compare(beer.abv, abv) == 0 && beerName.equals(beer.beerName) && type.equals(beer.type);
+    }
+
+    public boolean equalsMinusId(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Beer beer = (Beer) o;
+        return Double.compare(beer.abv, abv) == 0 && beerName.equals(beer.beerName) && type.equals(beer.type);
     }
 
     @Override

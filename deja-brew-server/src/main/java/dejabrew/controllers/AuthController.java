@@ -1,67 +1,90 @@
 package dejabrew.controllers;
 
+
 import dejabrew.domain.AppUserService;
 import dejabrew.models.AppUser;
+import dejabrew.security.JwtConverter;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import dejabrew.security.JwtConverter;
 
+import javax.validation.ValidationException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
 public class AuthController {
 
-    private final AuthenticationManager manager;
-    private final JwtConverter converter;
-    private final AppUserService service;
+    private final AuthenticationManager authenticationManager;
+    private final JwtConverter jwtConverter;
+    private final AppUserService appUserService;
 
-    public AuthController(AuthenticationManager manager, JwtConverter converter, AppUserService service) {
-        this.manager = manager;
-        this.converter = converter;
-        this.service = service;
+    public AuthController(AuthenticationManager authenticationManager, JwtConverter jwtConverter, AppUserService appUserService) {
+        this.authenticationManager = authenticationManager;
+        this.jwtConverter = jwtConverter;
+        this.appUserService = appUserService;
     }
 
     @PostMapping("/authenticate")
-    public ResponseEntity<?> authentication(@RequestBody Map<String, String> credentials) {
+    public ResponseEntity<?> authenticate(@RequestBody Map<String, String> credentials){
+        UsernamePasswordAuthenticationToken authToken =
+                new UsernamePasswordAuthenticationToken(credentials.get("username"), credentials.get("password"));
 
-        String username = credentials.get("username");
-        String password = credentials.get("password");
+        try {
+            Authentication authentication = authenticationManager.authenticate(authToken);
 
-        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(username, password);
-
-        var authentication = manager.authenticate(token);
-        if (authentication.isAuthenticated()) {
-            User user = (User) authentication.getPrincipal();
-
-            String jwtToken = converter.getTokenFromUser(user);
-
-            Map<String, String> returnMap = new HashMap<>();
-            returnMap.put("jwt_token", jwtToken);
-            return new ResponseEntity<>(returnMap, HttpStatus.OK);
+            if (authentication.isAuthenticated()){
+                String jwtToken = jwtConverter.getTokenFromUser((User) authentication.getPrincipal());
+                HashMap<String, String> map = new HashMap<>();
+                map.put("jwt_token", jwtToken);
+                return new ResponseEntity<>(map, HttpStatus.OK);
+            }
+        } catch (AuthenticationException ex) {
+            System.out.println(ex);
         }
 
         return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
 
+    @PostMapping("/refresh_token")
+    public ResponseEntity<Map<String, String>> refreshToken(UsernamePasswordAuthenticationToken principal) {
+        User user = new User(principal.getName(), principal.getName(), principal.getAuthorities());
+        String jwtToken = jwtConverter.getTokenFromUser(user);
+
+        HashMap<String, String> map = new HashMap<>();
+        map.put("jwt_token", jwtToken);
+
+        return new ResponseEntity<>(map, HttpStatus.OK);
+    }
+
     @PostMapping("/create_account")
     public ResponseEntity<?> createAccount(@RequestBody Map<String, String> credentials) {
+        AppUser appUser = null;
 
-        String username = credentials.get("username");
-        String password = credentials.get("password");
+        try {
+            String username = credentials.get("username");
+            String password = credentials.get("password");
 
-        AppUser user = service.create(username, password);
+            appUser = appUserService.create(username, password);
+        } catch (ValidationException ex) {
+            return new ResponseEntity<>(List.of(ex.getMessage()), HttpStatus.BAD_REQUEST);
+        } catch (DuplicateKeyException ex) {
+            return new ResponseEntity<>(List.of("The provided username already exists"), HttpStatus.BAD_REQUEST);
+        }
 
-        Map<String, Integer> returnMap = new HashMap<>();
-        returnMap.put("appUserId", user.getAppUserId());
+        HashMap<String, Integer> map = new HashMap<>();
+        map.put("appUserId", appUser.getAppUserId());
 
-
-        return new ResponseEntity<>(returnMap, HttpStatus.CREATED);
+        return new ResponseEntity<>(map, HttpStatus.CREATED);
     }
+
 }

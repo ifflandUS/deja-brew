@@ -1,6 +1,5 @@
 package dejabrew.data;
 
-import dejabrew.models.Review;
 import dejabrew.models.Visit;
 
 public interface VisitRepository {

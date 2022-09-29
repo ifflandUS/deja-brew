@@ -1,7 +1,9 @@
 package dejabrew.domain;
 
+
 import dejabrew.data.AppUserRepository;
 import dejabrew.models.AppUser;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -13,75 +15,70 @@ import java.util.List;
 
 @Service
 public class AppUserService implements UserDetailsService {
-
-    private final AppUserRepository repo;
+    private final AppUserRepository repository;
     private final PasswordEncoder encoder;
 
-    public AppUserService(AppUserRepository repo, PasswordEncoder encoder) {
-        this.repo = repo;
+    public AppUserService(AppUserRepository repository,
+                          PasswordEncoder encoder) {
+        this.repository = repository;
         this.encoder = encoder;
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        AppUser user =  repo.findByUsername(username);
+        AppUser appUser = repository.findByUsername(username);
 
-        if (user == null) {
-            throw new UsernameNotFoundException(String.format("No user found with name %s", username));
+        if (appUser == null || !appUser.isEnabled()) {
+            throw new UsernameNotFoundException(username + " not found");
         }
 
-        return user;
+        return appUser;
     }
 
     public AppUser create(String username, String password) {
-        // validate the username
-        validateUsername(username);
-
-        // validate the password
+        validate(username);
         validatePassword(password);
 
-        // hash the password so we don't try to save a password directly into the database
-        String passwordHash = encoder.encode(password);
+        password = encoder.encode(password);
 
-        // save the user
-        return repo.create(new AppUser(0, username, passwordHash, false, List.of("USER")));
+        AppUser appUser = new AppUser(0, username, password, false, List.of("User"));
+
+        return repository.create(appUser);
     }
 
-    private void validateUsername(String username) {
+    private void validate(String username) {
         if (username == null || username.isBlank()) {
-            throw new ValidationException("Username cannot be blank");
+            throw new ValidationException("username is required");
         }
 
         if (username.length() > 50) {
-            throw new ValidationException("Username cannot be longer than 50 characters");
+            throw new ValidationException("username must be less than 50 characters");
+        }
+        if (repository.findByUsername(username)!= null){
+            throw new DuplicateKeyException("username already exists");
         }
     }
 
     private void validatePassword(String password) {
-
         if (password == null || password.length() < 8) {
-            throw new ValidationException("password must be at least 8 characters long");
+            throw new ValidationException("password must be at least 8 characters");
         }
 
         int digits = 0;
-        int chars = 0;
-        int other = 0;
-
-        // this is an old school way to check a password, but this kind of style had fallen out of favor
+        int letters = 0;
+        int others = 0;
         for (char c : password.toCharArray()) {
             if (Character.isDigit(c)) {
                 digits++;
             } else if (Character.isLetter(c)) {
-                chars++;
+                letters++;
             } else {
-                other++;
+                others++;
             }
         }
 
-        if (digits == 0 || chars == 0 || other == 0) {
-            throw new ValidationException("Password must contain a combination of at least one digit, letter, and special character");
+        if (digits == 0 || letters == 0 || others == 0) {
+            throw new ValidationException("password must contain a digit, a letter, and a non-digit/non-letter");
         }
-
     }
-
 }

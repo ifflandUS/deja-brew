@@ -29,7 +29,13 @@ public class BeerJdbcTemplateRepository implements BeerRepository{
         return jdbcTemplate.query(sql, new BeerMapper(), breweryId);
     }
 
-
+    @Override
+    public Beer findBeersById(int beerId){
+        final String sql = "select beer_id, beer_name, abv, type, brewery_id " +
+                "from beer " +
+                "where beer_id = ?;";
+        return jdbcTemplate.queryForObject(sql, new BeerMapper(), beerId);
+    }
     @Override
     public Beer addBeer(Beer beer) {
         final String sql = "insert into beer (beer_name, abv, type, brewery_id) "
@@ -65,7 +71,8 @@ public class BeerJdbcTemplateRepository implements BeerRepository{
                 beer.getBeerName(),
                 beer.getAbv(),
                 beer.getType(),
-                beer.getBreweryId()) > 0;
+                beer.getBreweryId(),
+                beer.getBeerId()) > 0;
     }
 
     @Override

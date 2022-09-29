@@ -8,6 +8,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 
+
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
@@ -16,34 +17,34 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public SecurityConfig(JwtConverter converter) {
         this.converter = converter;
     }
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-
         http.csrf().disable();
 
         http.cors();
 
         http.authorizeRequests()
                 .antMatchers("/authenticate").permitAll()
-                .antMatchers(HttpMethod.GET,
-                        "/beer").permitAll()
-                .antMatchers(HttpMethod.GET,
-                        "/review", "/review/*").permitAll()
-                .antMatchers(HttpMethod.POST,
-                        "/visit", "/review").hasAnyRole("USER")
-                .antMatchers(HttpMethod.PUT,
-                        "/visit/*", "/review/*").hasAnyRole("USER")
-                .antMatchers(HttpMethod.DELETE,
-                        "/visit/*", "/review/*").hasAnyRole("USER")
+                .antMatchers("/refresh_token").authenticated()
+                .antMatchers("/create_account").permitAll()
+                .antMatchers(HttpMethod.GET, "/beer").permitAll()
+                .antMatchers(HttpMethod.GET, "/review", "/review/*").permitAll()
+                .antMatchers(HttpMethod.POST, "/review", "/visit", "/beer").hasAnyRole("USER")
+                .antMatchers(HttpMethod.PUT, "/review", "/visit", "/beer").hasAnyRole("USER")
+                .antMatchers(HttpMethod.DELETE, "/review", "/visit", "/beer").hasAnyRole("USER")
                 .antMatchers("/**").denyAll()
                 .and()
+                .addFilter(new JwtRequestFilter(authenticationManager(), converter))
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+
     }
 
-    @Bean
     @Override
+    @Bean
     protected AuthenticationManager authenticationManager() throws Exception {
         return super.authenticationManager();
     }
+
 }
