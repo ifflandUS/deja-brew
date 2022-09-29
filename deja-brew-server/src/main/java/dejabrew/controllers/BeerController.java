@@ -2,6 +2,7 @@ package dejabrew.controllers;
 
 import dejabrew.domain.BeerService;
 import dejabrew.domain.Result;
+import dejabrew.domain.ResultType;
 import dejabrew.models.Beer;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
@@ -42,7 +43,7 @@ public class BeerController {
        Result<Beer> result = service.updateBeer(beer);
        if(result.isSuccess()){
            return new ResponseEntity<>(result.getPayload(), HttpStatus.OK);
-       }else if (result.getMessages().get(0).contains("No Beer found")){
+       }else if (result.getType() == ResultType.NOT_FOUND){
            return new ResponseEntity<>(result.getMessages(), HttpStatus.NOT_FOUND);
        } else{
            return new ResponseEntity<>(result.getMessages(), HttpStatus.BAD_REQUEST);
