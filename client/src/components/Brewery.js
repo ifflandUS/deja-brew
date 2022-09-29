@@ -1,37 +1,40 @@
-// import { useHistory } from "react-router-dom";
+  import { useHistory } from "react-router-dom";
+  import React, {useState} from 'react';
 
 
-// function Brewery(){
+ function Brewery(){
 
-//     const [brewery, setBrewery] = useState([]);
+     const [brewery, setBrewery] = useState([]);
   
-//     const history = useHistory();
+     const history = useHistory();
   
-//     useEffect(() => {
-//       fetch('http://localhost:8080/api/agent')
-//       .then(resp => {
-//         if (resp.status === 200) {
-//           return resp.json();
-//         }
-//         return Promise.reject('Oops...Something went wrong.');
-//       })
-//       .then(data => {
-//         setBrewery(data);
-//       })
-//       .catch(err => history.push('/error', {errorMessage: err}));
-//     },[])
-
-//     return(<>
-    
-    
-    
-    
-    
-    
-//     </>)
 
 
+     const handleBack= () =>{
+        history.push(`/BrewerySearch`);
+     }
+     return(<>
+    
+        <h5 onClick={handleBack}>&lt;back to search</h5>
+        <h2>{brewery.name}</h2>
 
-// }
+        <p>
+            
+            {brewery.breweryCity},{brewery.breweryState}
+            <br/>*Ratings*
+            <br/>Website:<a href={brewery.breweryWebsite} target="_blank"/>
+            
+        </p>
+    
+    
+    
+    
+    
+    
+     </>)
 
-// export default Brewery;
+
+
+ }
+
+export default Brewery;
