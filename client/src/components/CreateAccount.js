@@ -5,6 +5,7 @@ export default function CreateAccount(){
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
+    const [zipcode, setZipcode] = useState("");
     const [errors, setErrors] = useState({
         "username": "",
         "password": "",
@@ -21,12 +22,12 @@ export default function CreateAccount(){
                                 headers: {
                                     "Content-Type": "application/json",
                                 },
-                                body: JSON.stringify({username, password,}),
+                                body: JSON.stringify({username, password, zipcode}),
         }).then(resp => {
-            
+            console.log(resp.status)
             switch(resp.status){
                 case 201:
-                    history.push("/log-in")
+                    return null;
                 case 400:
                     return resp.json();
                 default:
@@ -35,7 +36,9 @@ export default function CreateAccount(){
         })
         .then(body => {
             console.log(body)
-            if(body.at(0).includes("password")){
+            if(!body){
+                history.push("/log-in");
+            } else if(body.at(0).includes("password")){
                 const stateObj = { ...errors};
                 stateObj["password"] = body;
                 setErrors(stateObj)
@@ -130,10 +133,22 @@ export default function CreateAccount(){
           {errors.confirmPassword && <span className='font-weight-light text-danger text-center'><small>{errors.confirmPassword}</small></span>}
         </div>
         <div>
+          <label htmlFor="zipcode">Zipcode:</label>
+          <input
+            type="text"
+            onChange={(event) => setZipcode(event.target.value)}
+            id="zipcode"
+            name="zipcode"
+            onBlur={handleErrors}
+          />
+          <br></br>
+          {errors.confirmPassword && <span className='font-weight-light text-danger text-center'><small>{errors.confirmPassword}</small></span>}
+        </div>
+        <div>
           <button className="btn btn-info m-2 mx-auto" 
                   type="submit" 
                   disabled={errors.username||errors.password||errors.confirmPassword}>
-                    Login
+                    Create Account
           </button>
         </div>
       </form>
