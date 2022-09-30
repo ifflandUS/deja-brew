@@ -35,13 +35,13 @@ public class AppUserService implements UserDetailsService {
         return appUser;
     }
 
-    public AppUser create(String username, String password) {
+    public AppUser create(int zipCode, String username, String password) {
         validate(username);
         validatePassword(password);
 
         password = encoder.encode(password);
 
-        AppUser appUser = new AppUser(0, username, password, false, List.of("User"));
+        AppUser appUser = new AppUser(0,zipCode, username, password, false, List.of("User"));
 
         return repository.create(appUser);
     }
@@ -78,7 +78,7 @@ public class AppUserService implements UserDetailsService {
         }
 
         if (digits == 0 || letters == 0 || others == 0) {
-            throw new ValidationException("password must contain a digit, a letter, and a non-digit/non-letter");
+            throw new ValidationException("password must contain a digit, a letter, and a special character");
         }
     }
 }
