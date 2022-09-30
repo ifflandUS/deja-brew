@@ -1,7 +1,7 @@
   import { useHistory } from "react-router-dom";
   import React, {useState} from 'react';
 
-
+//can add ratings in here
  function Brewery(){
 
      const [brewery, setBrewery] = useState([]);
@@ -10,9 +10,9 @@
   
 
 
-     const handleBack= () =>{
-        history.push(`/BrewerySearch`);
-     }
+    //  const handleBack= () =>{
+    //     history.push(`/BrewerySearch`);
+    //  }
      return(<>
     
         <h5 onClick={handleBack}>&lt;back to search</h5>

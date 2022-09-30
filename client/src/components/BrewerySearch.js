@@ -20,7 +20,7 @@ function BrewerySearch(){
             "Content-Type": "application/json",
             "Accept": "application/json"
         },
-        body: search
+        
         
     };
 
