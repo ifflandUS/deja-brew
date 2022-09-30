@@ -29,6 +29,16 @@ class VisitJdbcTemplateRepositoryTest {
     }
 
     @Test
+    void shouldGetUserId() {
+        Visit visit = new Visit();
+        visit.setVisitId(5);
+        visit.setUserId(3);
+        visit.setBreweryId("new brewery");
+        visit.setDate(LocalDate.of(2022,9,10));
+        assertEquals(3,visit.getUserId());
+    }
+
+    @Test
     void shouldFindById() {
         Visit actual = visitRepository.findById(1);
         assertNotNull(actual);
@@ -46,9 +56,11 @@ class VisitJdbcTemplateRepositoryTest {
     void shouldUpdate() {
         Visit visit = new Visit();
         visit.setVisitId(3);
+        visit.setBreweryId("10-56-brewing-company-knox");
         visit.setDate(LocalDate.of(1999,5,4));
         assertTrue(visitRepository.update(visit));
         visit.setVisitId(16);
+        visit.setBreweryId("10-56-brewing-company-knox");
         visit.setDate(LocalDate.of(1999,5,4));
         assertFalse(visitRepository.update(visit));
     }
@@ -61,7 +73,7 @@ class VisitJdbcTemplateRepositoryTest {
 
     Visit makeVisit() {
         Visit visit = new Visit();
-        visit.setUserId(5);
+        visit.setUserId(2);
         visit.setBreweryId("10-56-brewing-company-knox");
         visit.setDate(LocalDate.of(2022,9,13));
         return visit;

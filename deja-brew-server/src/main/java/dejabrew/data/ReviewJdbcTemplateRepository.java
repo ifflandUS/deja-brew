@@ -23,7 +23,7 @@ public class ReviewJdbcTemplateRepository implements ReviewRepository {
     @Override
     public Review findById(int reviewId) {
 
-        final String sql = "select review_id, user_id, brewery_id, rating, review "
+        final String sql = "select review_id, app_user_id, brewery_id, rating, review "
                 + "from review "
                 + "where review_id = ?;";
 
@@ -59,7 +59,7 @@ public class ReviewJdbcTemplateRepository implements ReviewRepository {
     @Override
     public Review add(Review review) {
 
-        final String sql = "insert into review (user_id, brewery_id, rating, review) "
+        final String sql = "insert into review (app_user_id, brewery_id, rating, review) "
                 + " values (?,?,?,?);";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -75,7 +75,7 @@ public class ReviewJdbcTemplateRepository implements ReviewRepository {
         if (rowsAffected <= 0) {
             return null;
         }
-        review.setUserId(keyHolder.getKey().intValue());
+        review.setReviewId(keyHolder.getKey().intValue());
         return review;
     }
 
@@ -84,14 +84,12 @@ public class ReviewJdbcTemplateRepository implements ReviewRepository {
     public boolean update(Review review) {
 
         final String sql = "update review set "
-                + "user_id = ?, "
                 + "brewery_id = ?, "
                 + "rating = ?, "
-                + "review = ?;"
+                + "review = ? "
                 + "where review_id = ?;";
 
         return jdbcTemplate.update(sql,
-                review.getUserId(),
                 review.getBreweryId(),
                 review.getRating(),
                 review.getReview(),

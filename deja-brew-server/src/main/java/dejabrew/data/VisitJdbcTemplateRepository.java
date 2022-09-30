@@ -23,7 +23,7 @@ public class VisitJdbcTemplateRepository implements VisitRepository {
     @Override
     public Visit findById(int visitId) {
 
-        final String sql = "select visit_id, user_id, brewery_id, visit_date "
+        final String sql = "select visit_id, app_user_id, brewery_id, visit_date "
                 + "from visit "
                 + "where visit_id = ?;";
 
@@ -47,23 +47,22 @@ public class VisitJdbcTemplateRepository implements VisitRepository {
     @Override
     public Visit add(Visit visit) {
 
-        final String sql = "insert into visit (user_id, brewery_id, visit_date) "
-                + " values (?,?,?,?);";
+        final String sql = "insert into visit (app_user_id, brewery_id, visit_date) "
+                + "values (?,?,?);";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
         int rowsAffected = jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             ps.setInt(1, visit.getUserId());
             ps.setString(2, visit.getBreweryId());
-            ps.setDate(3, visit.getDate() == null ? null : Date.valueOf(visit.getDate()));;
-
+            ps.setDate(3, visit.getDate() == null ? null : Date.valueOf(visit.getDate()));
             return ps;
         }, keyHolder);
 
         if (rowsAffected <= 0) {
             return null;
         }
-        visit.setUserId(keyHolder.getKey().intValue());
+        visit.setVisitId(keyHolder.getKey().intValue());
         return visit;
     }
 
@@ -71,13 +70,11 @@ public class VisitJdbcTemplateRepository implements VisitRepository {
     public boolean update(Visit visit) {
 
         final String sql = "update visit set "
-                + "user_id = ?, "
                 + "brewery_id = ?, "
-                + "visit_date"
+                + "visit_date = ? "
                 + "where visit_id = ?;";
 
         return jdbcTemplate.update(sql,
-                visit.getUserId(),
                 visit.getBreweryId(),
                 visit.getDate(),
                 visit.getVisitId()) > 0;

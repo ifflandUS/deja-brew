@@ -27,6 +27,18 @@ create table visit (
         references app_user(app_user_id)
 );
 
+/* create table visit_beer (
+    visit_beer_id int primary key auto_increment,
+    visit_id int not null,
+    beer_id int not null,
+     constraint fk_visit_beer_visit_id
+         foreign key (visit_id)
+         references visit(visit_id),
+     constraint fk_visit_beer_beer_id
+         foreign key (beer_id)
+         references beer(beer_id)
+); */
+
 create table review(
     review_id int primary key auto_increment,
     app_user_id int not null,
@@ -44,7 +56,15 @@ delimiter $$
 create procedure known_good_state()
 begin
     -- reset all of the tables
+    delete from review;
+    alter table review auto_increment = 1;
+    /* delete from visit_beer;
+    alter table visit_beer auto_increment = 1; */
+    delete from visit;
+    alter table visit auto_increment = 1;
     truncate table beer;
+    delete from app_user;
+    alter table app_user auto_increment = 1;
 
     -- insert values
     insert into app_user
