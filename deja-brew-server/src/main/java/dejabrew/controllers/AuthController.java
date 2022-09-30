@@ -43,7 +43,7 @@ public class AuthController {
             Authentication authentication = authenticationManager.authenticate(authToken);
 
             if (authentication.isAuthenticated()){
-                String jwtToken = jwtConverter.getTokenFromUser((User) authentication.getPrincipal());
+                String jwtToken = jwtConverter.getTokenFromAppUser((AppUser) authentication.getPrincipal());
                 HashMap<String, String> map = new HashMap<>();
                 map.put("jwt_token", jwtToken);
                 return new ResponseEntity<>(map, HttpStatus.OK);
@@ -57,11 +57,18 @@ public class AuthController {
 
     @PostMapping("/refresh_token")
     public ResponseEntity<Map<String, String>> refreshToken(UsernamePasswordAuthenticationToken principal) {
-        User user = new User(principal.getName(), principal.getName(), principal.getAuthorities());
-        String jwtToken = jwtConverter.getTokenFromUser(user);
-
         HashMap<String, String> map = new HashMap<>();
-        map.put("jwt_token", jwtToken);
+        try {
+            Authentication authentication = authenticationManager.authenticate(principal);
+
+            if (authentication.isAuthenticated()){
+                String jwtToken = jwtConverter.getTokenFromAppUser((AppUser) authentication.getPrincipal());
+                map.put("jwt_token", jwtToken);
+                return new ResponseEntity<>(map, HttpStatus.OK);
+            }
+        } catch (AuthenticationException ex) {
+            System.out.println(ex);
+        }
 
         return new ResponseEntity<>(map, HttpStatus.OK);
     }
@@ -71,10 +78,11 @@ public class AuthController {
         AppUser appUser = null;
 
         try {
+            int zipCode = Integer.parseInt(credentials.get("zipcode"));
             String username = credentials.get("username");
             String password = credentials.get("password");
 
-            appUser = appUserService.create(username, password);
+            appUser = appUserService.create(zipCode, username, password);
         } catch (ValidationException ex) {
             return new ResponseEntity<>(List.of(ex.getMessage()), HttpStatus.BAD_REQUEST);
         } catch (DuplicateKeyException ex) {

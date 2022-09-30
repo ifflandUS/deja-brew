@@ -1,5 +1,6 @@
 package dejabrew.security;
 
+import dejabrew.models.AppUser;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.security.core.GrantedAuthority;
@@ -17,11 +18,11 @@ import java.util.stream.Collectors;
 public class JwtConverter {
 
     private Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
-    private final String ISSUER = "bug-safari";
+    private final String ISSUER = "deja-brew";
     private final int EXPIRATION_MINUTES = 15;
     private final int EXPIRATION_MILLIS = EXPIRATION_MINUTES * 60 * 1000;
 
-    public String getTokenFromUser(User user) {
+    public String getTokenFromAppUser(AppUser user) {
 
         String authorities = user.getAuthorities().stream()
                 .map(i -> i.getAuthority())
@@ -31,12 +32,14 @@ public class JwtConverter {
                 .setIssuer(ISSUER)
                 .setSubject(user.getUsername())
                 .claim("authorities", authorities)
+                .claim("appUserId", user.getAppUserId())
+                .claim("zipCode", user.getZipCode())
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_MILLIS))
                 .signWith(key)
                 .compact();
     }
 
-    public User getUserFromToken(String token) {
+    public AppUser getAppUserFromToken(String token) {
 
         if (token == null || !token.startsWith("Bearer ")) {
             return null;
@@ -51,11 +54,14 @@ public class JwtConverter {
 
             String username = jws.getBody().getSubject();
             String authStr = (String) jws.getBody().get("authorities");
+            int userId = Integer.parseInt((String) jws.getBody().get("appUserId"));
+            int zipCode = Integer.parseInt((String) jws.getBody().get("zipCode"));
+
             List<GrantedAuthority> authorities = Arrays.stream(authStr.split(","))
                     .map(i -> new SimpleGrantedAuthority(i))
                     .collect(Collectors.toList());
 
-            return new User(username, username, authorities);
+            return new AppUser(userId, zipCode, username, username, false, AppUser.convertAuthoritiesToRoles(authorities));
 
         } catch (JwtException e) {
             System.out.println(e);

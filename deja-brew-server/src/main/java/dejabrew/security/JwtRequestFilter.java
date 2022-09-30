@@ -1,5 +1,6 @@
 package dejabrew.security;
 
+import dejabrew.models.AppUser;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -29,7 +30,7 @@ public class JwtRequestFilter extends BasicAuthenticationFilter {
         String authorization = request.getHeader("Authorization");
         if (authorization != null && authorization.startsWith("Bearer ")) {
 
-            User user = converter.getUserFromToken(authorization);
+            AppUser user = converter.getAppUserFromToken(authorization);
             if (user == null) {
                 response.setStatus(403); // Forbidden
             } else {

@@ -17,9 +17,12 @@ public class AppUser extends User {
 
     private int appUserId;
 
-    public AppUser(int appUserId, String username, String passwordHash, boolean disabled, List<String> roles) {
+    private int zipCode;
+
+    public AppUser(int appUserId,int zipCode, String username, String passwordHash, boolean disabled, List<String> roles) {
         super(username, passwordHash, !disabled, true, true, true, convertRolesToAuthorities(roles) );
         this.appUserId = appUserId;
+        this.zipCode = zipCode;
     }
 
 
@@ -29,6 +32,14 @@ public class AppUser extends User {
 
     public void setAppUserId(int appUserId) {
         this.appUserId = appUserId;
+    }
+
+    public int getZipCode() {
+        return zipCode;
+    }
+
+    public void setZipCode(int zipCode) {
+        this.zipCode = zipCode;
     }
 
     public static List<GrantedAuthority> convertRolesToAuthorities(List<String> roles) {
