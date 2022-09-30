@@ -11,11 +11,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDate;
 
-<<<<<<< HEAD
-=======
-import static org.junit.jupiter.api.Assertions.*;
-
->>>>>>> main
 @SpringBootTest
 class VisitJdbcTemplateRepositoryTest {
 
