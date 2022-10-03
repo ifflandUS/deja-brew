@@ -22,6 +22,8 @@ import Singles from "./Singles";
     // })
     // .then(data =>{
     //     setReviews(data);
+
+    //     for()
     // })
     // .catch(err => history.push('/error', {errorMessage: err}));
 
