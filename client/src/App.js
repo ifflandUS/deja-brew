@@ -37,12 +37,13 @@ function App() {
 
     console.log(jwtDecode(token));
 
-    const { sub: username, authorities: authoritiesString, zipCode: zipCode} = jwtDecode(token);
+    const { sub: username, authorities: authoritiesString, appUserId: userId, zipCode: zipCode} = jwtDecode(token);
 
     const roles = authoritiesString.split(',');
 
     const user = {
       username,
+      userId,
       zipCode,
       roles,
       token,
