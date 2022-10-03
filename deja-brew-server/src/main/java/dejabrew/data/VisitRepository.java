@@ -1,11 +1,14 @@
 package dejabrew.data;
 
+import dejabrew.models.AppUser;
 import dejabrew.models.Visit;
+
+import java.util.List;
 
 public interface VisitRepository {
     Visit findById(int visitId);
 
-//    Review findByBrewery(Brewery brewery);
+    List<Visit> findByUser(AppUser user);
 
     Visit add(Visit visit);
 
