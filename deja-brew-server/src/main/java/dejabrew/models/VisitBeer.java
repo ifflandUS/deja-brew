@@ -8,6 +8,8 @@ public class VisitBeer {
 
     private int beer_id;
 
+    private int count;
+
     public int getVisit_beer_id() {
         return visit_beer_id;
     }

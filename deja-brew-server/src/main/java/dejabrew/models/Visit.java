@@ -1,6 +1,7 @@
 package dejabrew.models;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public class Visit {
 
@@ -14,6 +15,8 @@ public class Visit {
 
 
     private LocalDate date;
+
+    private List<Beer> beerList;
 
     public Visit() {
 
@@ -58,4 +61,11 @@ public class Visit {
         this.date = date;
     }
 
+    public List<Beer> getBeerList() {
+        return beerList;
+    }
+
+    public void setBeerList(List<Beer> beerList) {
+        this.beerList = beerList;
+    }
 }

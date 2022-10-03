@@ -2,6 +2,7 @@ package dejabrew.domain;
 
 import dejabrew.data.VisitBeerRepository;
 import dejabrew.data.VisitRepository;
+import dejabrew.models.AppUser;
 import dejabrew.models.Beer;
 import dejabrew.models.Visit;
 import dejabrew.models.VisitBeer;
@@ -23,9 +24,9 @@ public class VisitService {
         return repository.findById(visitId);
     }
 
-//    public Visit findByBrewery(Brewery brewery) {
-//        return repository.findByBrewery(brewery);
-//    }
+    public List<Visit> findByUser(AppUser user) {
+        return repository.findByUser(user);
+    }
 
     public Result<Visit> add(Visit visit) {
         Result<Visit> result = validate(visit);
@@ -66,16 +67,16 @@ public class VisitService {
         return repository.deleteById(visitId);
     }
 
-    public Result<List<Beer>> addBeer(VisitBeer visitBeer) {
-        Result<VisitBeer> result = validate(visitBeer);
-        if (!result.isSuccess()) {
-            return result;
-        }
-        if (!visitBeerRepository.add(visitBeer)) {
-            result.addMessage("beer not added", ResultType.INVALID);
-        }
-        return result;
-    }
+//    public Result<Beer> addBeer(VisitBeer visitBeer) {
+//        Result<VisitBeer> result = validate(visitBeer);
+//        if (!result.isSuccess()) {
+//            return result;
+//        }
+//        if (!visitBeerRepository.add(visitBeer)) {
+//            result.addMessage("beer not added", ResultType.INVALID);
+//        }
+//        return result;
+//    }
 
 //    public Result<Void> updateVisit(VisitBeer visitBeer) {
 //        Result<Void> result = validate(visitBeer);
