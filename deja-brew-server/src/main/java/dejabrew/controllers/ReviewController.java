@@ -2,6 +2,7 @@ package dejabrew.controllers;
 
 import dejabrew.domain.Result;
 import dejabrew.domain.ReviewService;
+import dejabrew.models.AppUser;
 import dejabrew.models.Review;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +19,7 @@ public class ReviewController {
     }
 
     @GetMapping("/{reviewId}")
-    public ResponseEntity<Review> findById(@PathVariable int reviewId) {
+    public ResponseEntity<Review> findById(@PathVariable int reviewId, @RequestHeader(name = "authorization")AppUser user) {
         Review review = service.findById(reviewId);
         if (review == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

@@ -25,6 +25,7 @@ create table visit (
     constraint fk_visit_app_user_id
         foreign key (app_user_id)
         references app_user(app_user_id)
+
 );
 
 create table visit_beer (
@@ -41,6 +42,7 @@ create table visit_beer (
 
 create table review(
     review_id int primary key auto_increment,
+
     app_user_id int not null,
     brewery_id varchar(100) not null,
     rating int not null,
@@ -73,7 +75,7 @@ begin
         (1, "userone", "cc3a0280e4fc1415930899896574e118", 0),
         (2, "usertwo", "dd3a0280e4fc1415930899896574e118", 0),
         (3, "userthree", "ee3a0280e4fc1415930899896574e118", 0);
-        
+
     insert into beer
         values
         (1, "Miller", 4.0, "American Pilsner", "madtree-brewing-cincinnati"),

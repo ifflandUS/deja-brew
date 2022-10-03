@@ -1,89 +1,108 @@
 package dejabrew.data;
 
+
+import dejabrew.data.mappers.AppUserMapper;
 import dejabrew.models.AppUser;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.util.Collection;
 import java.util.List;
 
 @Repository
 public class AppUserJdbcTemplateRepository implements AppUserRepository {
 
-    private final JdbcTemplate template;
+    private final JdbcTemplate jdbcTemplate;
 
-    public AppUserJdbcTemplateRepository(JdbcTemplate template) {
-        this.template = template;
+    public AppUserJdbcTemplateRepository(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
-    public AppUser findByUsername(String name) {
-        List<String> roles = findRolesByUsername(name);
+    @Transactional
+    public AppUser findByUsername(String username) {
+        List<String> roles = getRolesByUsername(username);
 
-        final String sql = "select app_user_id, username, password_hash, disabled " +
-                "from app_user " +
-                "where username = ?;";
+        final String sql = "select app_user_id, zipcode, username, password_hash, disabled "
+                + "from app_user "
+                + "where username = ?;";
 
-
-        return template.query(sql, (rs, i) -> new AppUser(
-                rs.getInt("app_user_id"),
-                rs.getString("username"),
-                rs.getString("password_hash"),
-                rs.getBoolean("disabled"),
-                roles
-        ), name).stream().findFirst().orElse(null);
-    }
-
-    private List<String> findRolesByUsername(String name) {
-        final String sql = "select ar.`name` " +
-                "from app_user au " +
-                "left join app_user_role aur on au.app_user_id = aur.app_user_id " +
-                "left join app_role ar on ar.app_role_id = aur.app_role_id " +
-                "where au.username = ?;";
-
-        return template.query(sql, (rs, i) -> rs.getString("name"), name);
-
+        return jdbcTemplate.query(sql, new AppUserMapper(roles), username)
+                .stream()
+                .findFirst().orElse(null);
     }
 
     @Override
+    @Transactional
     public AppUser create(AppUser user) {
-        final String sql = "insert into app_user (username, password_hash, disabled) values (?, ?, ?);";
-        KeyHolder holder = new GeneratedKeyHolder(); // use consistent patterns
 
-        int rowCount = template.update(conn -> {
-            PreparedStatement statement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+        final String sql = "insert into app_user (zipcode, username, password_hash) values (?,?, ?);";
 
-            statement.setString(1, user.getUsername());
-            statement.setString(2, user.getPassword());
-            statement.setBoolean(3, !user.isEnabled());
+        GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
+        int rowsAffected = jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            ps.setInt(1, user.getZipCode());
+            ps.setString(2, user.getUsername());
+            ps.setString(3, user.getPassword());
+            return ps;
+        }, keyHolder);
 
-            return statement;
-        }, holder);
-
-        if (rowCount == 0) {
+        if (rowsAffected <= 0) {
             return null;
         }
 
-        user.setAppUserId(holder.getKey().intValue());
+        user.setAppUserId(keyHolder.getKey().intValue());
 
-        updateRoles(user.getAppUserId(), AppUser.convertAuthoritiesToRoles(user.getAuthorities()));
+        updateRoles(user);
 
         return user;
     }
 
-    private void updateRoles(int appUserId, List<String> roles) {
-        template.update("delete from app_user_role where app_user_id = ?", appUserId);
+    @Override
+    @Transactional
+    public void update(AppUser user) {
 
-        if (roles == null) {
+        final String sql = "update app_user set "
+                + "zipcode = ?, "
+                + "username = ?, "
+                + "disabled = ? "
+                + "where app_user_id = ?";
+
+        jdbcTemplate.update(sql,
+                user.getZipCode(), user.getUsername(), !user.isEnabled(), user.getAppUserId());
+
+        updateRoles(user);
+    }
+
+    private void updateRoles(AppUser user) {
+        // delete all roles, then re-add
+        jdbcTemplate.update("delete from app_user_role where app_user_id = ?;", user.getAppUserId());
+
+        Collection<GrantedAuthority> authorities = user.getAuthorities();
+
+        if (authorities == null) {
             return;
         }
 
-        for (String role : roles) {
-            template.update("insert into app_user_role " +
-                    "select ?, app_role_id from app_role where `name` = ?;", appUserId, role);
+        for (String role : AppUser.convertAuthoritiesToRoles(authorities)) {
+            String sql = "insert into app_user_role (app_user_id, app_role_id) "
+                    + "select ?, app_role_id from app_role where `name` = ?;";
+            jdbcTemplate.update(sql, user.getAppUserId(), role);
         }
     }
+
+    private List<String> getRolesByUsername(String username) {
+        final String sql = "select r.name "
+                + "from app_user_role ur "
+                + "inner join app_role r on ur.app_role_id = r.app_role_id "
+                + "inner join app_user au on ur.app_user_id = au.app_user_id "
+                + "where au.username = ?";
+        return jdbcTemplate.query(sql, (rs, rowId) -> rs.getString("name"), username);
+    }
+
 }

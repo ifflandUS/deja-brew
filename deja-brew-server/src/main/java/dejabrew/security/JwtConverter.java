@@ -1,6 +1,6 @@
 package dejabrew.security;
 
-
+import dejabrew.models.AppUser;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.security.core.GrantedAuthority;
@@ -17,50 +17,56 @@ import java.util.stream.Collectors;
 @Component
 public class JwtConverter {
 
-    private final String ISSUER = "deja-brew-app";
-    private final String AUTHORITIES = "authorities";
-    private final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
-
+    private Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+    private final String ISSUER = "deja-brew";
     private final int EXPIRATION_MINUTES = 15;
-    private final int EXPIRATION_TIME = EXPIRATION_MINUTES * 60 * 1000; // nanosecond conversion
+    private final int EXPIRATION_MILLIS = EXPIRATION_MINUTES * 60 * 1000;
 
+    public String getTokenFromAppUser(AppUser user) {
 
-    public User getUserFromToken(String token) {
+        String authorities = user.getAuthorities().stream()
+                .map(i -> i.getAuthority())
+                .collect(Collectors.joining(","));
+
+        return Jwts.builder()
+                .setIssuer(ISSUER)
+                .setSubject(user.getUsername())
+                .claim("authorities", authorities)
+                .claim("appUserId", user.getAppUserId())
+                .claim("zipCode", user.getZipCode())
+                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_MILLIS))
+                .signWith(key)
+                .compact();
+    }
+
+    public AppUser getAppUserFromToken(String token) {
+
+        if (token == null || !token.startsWith("Bearer ")) {
+            return null;
+        }
+
         try {
             Jws<Claims> jws = Jwts.parserBuilder()
                     .requireIssuer(ISSUER)
                     .setSigningKey(key)
                     .build()
-                    .parseClaimsJws(token);
+                    .parseClaimsJws(token.substring(7));
 
             String username = jws.getBody().getSubject();
+            String authStr = (String) jws.getBody().get("authorities");
+            int userId = Integer.parseInt((String) jws.getBody().get("appUserId"));
+            int zipCode = Integer.parseInt((String) jws.getBody().get("zipCode"));
 
-            List<GrantedAuthority> authorities = Arrays.stream(((String) jws.getBody().get(AUTHORITIES)).split(","))
-                    .map(SimpleGrantedAuthority::new)
+            List<GrantedAuthority> authorities = Arrays.stream(authStr.split(","))
+                    .map(i -> new SimpleGrantedAuthority(i))
                     .collect(Collectors.toList());
 
-            return new User(username, username, authorities);
+            return new AppUser(userId, zipCode, username, username, false, AppUser.convertAuthoritiesToRoles(authorities));
 
-        } catch (JwtException ex) {
-            System.out.println(ex.getMessage());
+        } catch (JwtException e) {
+            System.out.println(e);
         }
 
         return null;
-    }
-
-    //    * [ ] `getTokenFromUser`
-    public String getTokenFromUser(User user) {
-        // get the rolls off of the user
-        String roles = user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.joining(","));
-
-        return Jwts.builder()
-                .setIssuer(ISSUER)
-                .setSubject(user.getUsername()) // this is typically what the actual user name or id
-
-                .claim(AUTHORITIES, roles) // claiming to be true about the person that the token is about
-
-                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
-                .signWith(key)
-                .compact();
     }
 }

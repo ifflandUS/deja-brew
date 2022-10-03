@@ -2,6 +2,7 @@ package dejabrew.data;
 
 
 import dejabrew.data.mappers.ReviewMapper;
+import dejabrew.models.AppUser;
 import dejabrew.models.Review;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -33,28 +34,28 @@ public class ReviewJdbcTemplateRepository implements ReviewRepository {
     }
 
 
-//    @Override
-//    public Review findByBrewery(Brewery breweryId) {
-//        final String sql = "select brewery_id"
-//                + "from review "
-//                + "where review_id = ?;";
-//
-//        return jdbcTemplate.query(sql, new ReviewMapper(), breweryId).stream()
-//                .findFirst()
-//                .orElse(null);
-//    }
+    @Override
+    public Review findByBrewery(String breweryId) {
+        final String sql = "select *"
+                + "from review "
+                + "where brewery_id = ?;";
+
+        return jdbcTemplate.query(sql, new ReviewMapper(), breweryId).stream()
+                .findFirst()
+                .orElse(null);
+    }
 
 
-//    @Override
-//    public Review findByUser(User user) {
-//        final String sql = "select user_id"
-//                + "from review "
-//                + "where review_id = ?;";
-//
-//        return jdbcTemplate.query(sql, new ReviewMapper(), user).stream()
-//                .findFirst()
-//                .orElse(null);
-//    }
+    @Override
+    public Review findByUser(AppUser appUser) {
+        final String sql = "select *"
+                + "from review "
+                + "where app_user_id = ?;";
+
+        return jdbcTemplate.query(sql, new ReviewMapper(), appUser.getAppUserId()).stream()
+                .findFirst()
+                .orElse(null);
+    }
 
     @Override
     public Review add(Review review) {
