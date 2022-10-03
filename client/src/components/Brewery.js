@@ -1,32 +1,49 @@
-  import { useHistory } from "react-router-dom";
-  import React, {useState} from 'react';
-
-//can add ratings in here
- function Brewery(){
-
-     const [brewery, setBrewery] = useState([]);
-  
-     const history = useHistory();
-  
+  import { useState } from "react";
+import { useHistory } from "react-router-dom";
+import Singles from "./Singles";
 
 
-    //  const handleBack= () =>{
-    //     history.push(`/BrewerySearch`);
-    //  }
+
+
+
+ function Brewery({brewery}){
+    const [reviews, setReviews] = useState([]);
+    const history = useHistory();
+    
+
+    // useEffect(( )=>{
+    
+    // fetch(`http://localhost:3000/api/review/${brewery.id}`)
+    // .then(resp =>{
+    //     if (resp.status === 200){
+    //         return resp.json();
+    //     }
+    //     return Promise.reject('Oops...Something Happened.');
+    // })
+    // .then(data =>{
+    //     setReviews(data);
+    // })
+    // .catch(err => history.push('/error', {errorMessage: err}));
+
+    // },[])
+
+    
+    const handleIndividual = () =>{
+      history.push(
+           `/Brewery/${brewery.id}` );
+        
+     }
      return(<>
+    <tr>
+      <td>{brewery.name} <br/>* * * * *</td>
+      <td>{brewery.country}</td>
+      <td>{brewery.state}</td>
+      <td>{brewery.city}</td>
+      <td><button type="button" className="btn btn-success mr-3" onClick = {handleIndividual}>More...</button></td>
     
-        <h5 onClick={handleBack}>&lt;back to search</h5>
-        <h2>{brewery.name}</h2>
 
-        <p>
-            
-            {brewery.breweryCity},{brewery.breweryState}
-            <br/>*Ratings*
-            <br/>Website:<a href={brewery.breweryWebsite} target="_blank"/>
-            
-        </p>
-    
-    
+    </tr>
+        
     
     
     
@@ -37,4 +54,4 @@
 
  }
 
-export default Brewery;
+ export default Brewery;

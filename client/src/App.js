@@ -5,6 +5,8 @@ import BrewerySearch from './components/BrewerySearch';
 import NotFound from './components/NotFound';
 import Profile from './components/Profile';
 import ServerError from './components/ServerError';
+
+import Singles from './components/Singles';
 import logo from './db_logo.PNG';
 
 import './index.css';
@@ -31,11 +33,12 @@ function App() {
             </ul>
           </div>
         </nav>
-        <div className='container'>
+        <div className='container pb-2'>
           <Switch>
             <Route exact path="/"><Home/></Route>
-            <Route path="/BrewerySearch"><BrewerySearch/></Route>
-            <Route path = {"/Brewery:breweryId"}><Brewery/></Route>
+            <Route exact path="/BrewerySearch"><BrewerySearch/></Route>
+            <Route exact path = "/Brewery"><Brewery/></Route>
+            <Route path = {["/Brewery/"]}><Singles/></Route>
             <Route exact path="/error"><ServerError/></Route>
             <Route path="/Profile"><Profile/></Route>
         
@@ -43,7 +46,7 @@ function App() {
         </div>
 
 
-        <footer className="footer text-center text-lg-start bg-info">
+        <footer className="footer text-center text-lg-start bg-info fixed-bottom">
           <div className='text-center p-3'>© 2020 Copyright: Deja-Brew</div></footer>
         </Router>
     </div>

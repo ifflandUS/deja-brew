@@ -1,60 +1,62 @@
 import React, {useEffect, useState} from 'react';
 import { useHistory } from 'react-router-dom';
-import { Form } from 'react-bootstrap';
 import Brewery from './Brewery';
 
- const brewery = {id:'',name:'',street:'', city:'', state:'',county:'',longitude:0.0, latitude:0.0, website_url:'' }
-const breweries = [];
+
+
 function BrewerySearch(){
   
   const history = useHistory();
   const [breweries, setBreweries] = useState([]);
+  const [search, setSearch] = useState("");
 
-  const handleSearch = (e) =>{
-      const searchString = e.target.value;
-      const search = searchString.replace(/ /g,"_");
+  const onSubmit = (e) =>{
+     e.preventDefault();
 
       const init = {
         method: "GET",
         headers: {
-            "Content-Type": "application/json",
-            "Accept": "application/json"
+            "Content-Type": "application/json"
+            //"Accept": "application/json"
         },
         
         
     };
 
-      fetch('https://api.openbrewerydb.org/breweries/search?query={search}&per_page=15', init)
+      fetch(`https://api.openbrewerydb.org/breweries/search?query=${search}&per_page=15`, init)
       .then( resp =>{
       switch(resp.status){
-        case 204:
+        case 200:
           return resp.json();
       } return Promise.reject('Oops... something went wrong.');
 
     })
     .then(data => {
-      setBreweries(data)
-      breweries.push(data);
+      setBreweries(data);
     })
     .catch(err => history.push('/error', {errorMessage: err}));
   
 
-    // const handeMoreClick = () =>{
-    //   //set brewery to that and then go to specific brewery page??
-    //   history.pushState('/brewery/${brewery.id}');
+  }
+  const handleChange = (e) => {
+    e.preventDefault();
 
+    setSearch(e.target.value);
 
-    // }
+    if (search.length > 0) {
+        return search;
+    ;}
+
   }
     return(
         <>
             <h2>Brewery Search</h2><p>Find Specific Breweries by Name, City, or State.</p>
            
-            <div><form className="SearchBar">
+            <div><form className="SearchBar" onSubmit={onSubmit}>
                 <input className="search_input"
-                input="text" id="search" />
+                input="text" id="search" placeholder='search for breweries' onChange={handleChange}/>
                 
-                <button className="search_button" onClick={handleSearch}>Search</button>
+                <button className="search_button">Search</button>
                 </form>
                 </div>
 
@@ -68,7 +70,7 @@ function BrewerySearch(){
                   </tr></thead>
 
               <tbody>
-           {breweries.map(brewery => <Brewery key={brewery.breweryId} brewery={brewery} />)}
+           {breweries.map(brewery => <Brewery key={brewery.id} brewery={brewery} />)}
            </tbody> 
                 </table>
               </div>
