@@ -12,6 +12,10 @@ function Profile(){
         <>
             <h1>Cheers, {auth.user.username}!</h1>
             <BrewMap/>
+            <h2>Recent Visits:</h2>
+            <div className="container">
+                
+            </div>
         </>
         
     )
