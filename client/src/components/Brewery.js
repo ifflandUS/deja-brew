@@ -31,8 +31,10 @@ import Singles from "./Singles";
 
     
     const handleIndividual = () =>{
-      history.push(
-           `/Brewery/${brewery.id}` );
+      history.push({ 
+        pathname: `/Brewery/${brewery.id}` ,
+        state: {breweryId: brewery.id}
+       });
         
      }
      return(<>

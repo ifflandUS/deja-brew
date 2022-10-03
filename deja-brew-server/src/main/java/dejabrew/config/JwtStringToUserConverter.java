@@ -18,6 +18,7 @@ public class JwtStringToUserConverter implements Converter<String, AppUser> {
 
     @Override
     public AppUser convert(String s) {
-        return converter.getAppUserFromToken(s.substring("Bearer ".length()));
+        AppUser user  = converter.getAppUserFromToken(s);
+        return user;
     }
 }

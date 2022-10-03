@@ -2,6 +2,7 @@ package dejabrew.data;
 
 
 import dejabrew.data.mappers.ReviewMapper;
+import dejabrew.models.AppUser;
 import dejabrew.models.Review;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -23,7 +24,7 @@ public class ReviewJdbcTemplateRepository implements ReviewRepository {
     @Override
     public Review findById(int reviewId) {
 
-        final String sql = "select review_id, user_id, brewery_id, rating, review "
+        final String sql = "select review_id, app_user_id, brewery_id, rating, review "
                 + "from review "
                 + "where review_id = ?;";
 
@@ -33,33 +34,33 @@ public class ReviewJdbcTemplateRepository implements ReviewRepository {
     }
 
 
-//    @Override
-//    public Review findByBrewery(Brewery breweryId) {
-//        final String sql = "select brewery_id"
-//                + "from review "
-//                + "where review_id = ?;";
-//
-//        return jdbcTemplate.query(sql, new ReviewMapper(), breweryId).stream()
-//                .findFirst()
-//                .orElse(null);
-//    }
+    @Override
+    public Review findByBrewery(String breweryId) {
+        final String sql = "select *"
+                + "from review "
+                + "where brewery_id = ?;";
+
+        return jdbcTemplate.query(sql, new ReviewMapper(), breweryId).stream()
+                .findFirst()
+                .orElse(null);
+    }
 
 
-//    @Override
-//    public Review findByUser(User user) {
-//        final String sql = "select user_id"
-//                + "from review "
-//                + "where review_id = ?;";
-//
-//        return jdbcTemplate.query(sql, new ReviewMapper(), user).stream()
-//                .findFirst()
-//                .orElse(null);
-//    }
+    @Override
+    public Review findByUser(AppUser appUser) {
+        final String sql = "select *"
+                + "from review "
+                + "where app_user_id = ?;";
+
+        return jdbcTemplate.query(sql, new ReviewMapper(), appUser.getAppUserId()).stream()
+                .findFirst()
+                .orElse(null);
+    }
 
     @Override
     public Review add(Review review) {
 
-        final String sql = "insert into review (user_id, brewery_id, rating, review) "
+        final String sql = "insert into review (app_user_id, brewery_id, rating, review) "
                 + " values (?,?,?,?);";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -75,7 +76,7 @@ public class ReviewJdbcTemplateRepository implements ReviewRepository {
         if (rowsAffected <= 0) {
             return null;
         }
-        review.setUserId(keyHolder.getKey().intValue());
+        review.setReviewId(keyHolder.getKey().intValue());
         return review;
     }
 
@@ -84,14 +85,12 @@ public class ReviewJdbcTemplateRepository implements ReviewRepository {
     public boolean update(Review review) {
 
         final String sql = "update review set "
-                + "user_id = ?, "
                 + "brewery_id = ?, "
                 + "rating = ?, "
-                + "review = ?;"
+                + "review = ? "
                 + "where review_id = ?;";
 
         return jdbcTemplate.update(sql,
-                review.getUserId(),
                 review.getBreweryId(),
                 review.getRating(),
                 review.getReview(),

@@ -2,6 +2,7 @@ package dejabrew.controllers;
 
 import dejabrew.domain.Result;
 import dejabrew.domain.ReviewService;
+import dejabrew.models.AppUser;
 import dejabrew.models.Review;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @CrossOrigin(origins = {"http://localhost:3000"})
-@RequestMapping("/api/review")
+@RequestMapping("/review")
 public class ReviewController {
     private final ReviewService service;
 
@@ -18,7 +19,7 @@ public class ReviewController {
     }
 
     @GetMapping("/{reviewId}")
-    public ResponseEntity<Review> findById(@PathVariable int reviewId) {
+    public ResponseEntity<Review> findById(@PathVariable int reviewId, @RequestHeader(name = "authorization")AppUser user) {
         Review review = service.findById(reviewId);
         if (review == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -43,7 +44,7 @@ public class ReviewController {
 
         Result<Review> result = service.update(review);
         if (result.isSuccess()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(result.getPayload(), HttpStatus.OK);
         }
 
         return ErrorResponse.build(result);
@@ -52,7 +53,7 @@ public class ReviewController {
     @DeleteMapping("/{reviewId}")
     public ResponseEntity<Void> deleteById(@PathVariable int reviewId) {
         if (service.deleteById(reviewId)) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }

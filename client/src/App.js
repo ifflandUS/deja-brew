@@ -10,10 +10,12 @@ import { useState, useEffect } from "react";
 import AuthContext from "./components/AuthContext";
 import NavBar from './components/NavBar';
 import jwtDecode from 'jwt-decode';
+import BeerForm from './components/BeerForm';
 
 import './index.css';
 import Login from './components/Login';
 import CreateAccount from './components/CreateAccount';
+import VisitForm from './components/VisitForm';
 
 const LOCAL_STORAGE_TOKEN_KEY = "dejaBrewToken";
 
@@ -35,12 +37,13 @@ function App() {
 
     console.log(jwtDecode(token));
 
-    const { sub: username, authorities: authoritiesString, zipCode: zipCode} = jwtDecode(token);
+    const { sub: username, authorities: authoritiesString, appUserId: userId, zipCode: zipCode} = jwtDecode(token);
 
     const roles = authoritiesString.split(',');
 
     const user = {
       username,
+      userId,
       zipCode,
       roles,
       token,
@@ -85,6 +88,8 @@ function App() {
             <Route path="/Profile"><Profile/></Route>
             <Route path="/log-in"><Login/></Route>
             <Route path="/create-account"><CreateAccount/></Route>
+            <Route path="/visit-form"><VisitForm/></Route>
+            <Route path="/beer-form"><BeerForm/></Route>
           </Switch>
         </div>
 
