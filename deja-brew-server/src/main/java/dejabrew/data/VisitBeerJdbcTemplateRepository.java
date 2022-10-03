@@ -30,22 +30,24 @@ public class VisitBeerJdbcTemplateRepository implements VisitBeerRepository {
     public boolean update(VisitBeer visitBeer) {
 
         final String sql = "update visit_beer set "
-                + "where visit_id = ? and beer_id = ?;";
+                + "visit_id = ?, "
+                + "beer_id = ? "
+                + "where visit_beer_id = ?;";
 
         return jdbcTemplate.update(sql,
                 visitBeer.getVisit_id(),
                 visitBeer.getBeer_id(),
-                visitBeer.getVisit_beer_id()) > 0;
+                visitBeer.getVisit_beer_id())> 0;
 
     }
 
 
     @Override
-    public boolean deleteByKey(int visitId, int beerId) {
+    public boolean deleteById(int visitBeerId) {
 
         final String sql = "delete from visit_beer "
-                + "where visit_id = ? and beer_id = ?;";
+                + "where visit_beer_id = ?;";
 
-        return jdbcTemplate.update(sql, visitId, beerId) > 0;
+        return jdbcTemplate.update(sql, visitBeerId) > 0;
     }
 }

@@ -1,14 +1,22 @@
 package dejabrew.domain;
 
+import dejabrew.data.VisitBeerRepository;
 import dejabrew.data.VisitRepository;
-import dejabrew.models.Review;
+import dejabrew.models.Beer;
 import dejabrew.models.Visit;
+import dejabrew.models.VisitBeer;
+import org.springframework.stereotype.Service;
 
+import java.util.List;
+
+@Service
 public class VisitService {
     private final VisitRepository repository;
+    private final VisitBeerRepository visitBeerRepository;
 
-    public VisitService(VisitRepository repository) {
+    public VisitService(VisitRepository repository, VisitBeerRepository visitBeerRepository) {
         this.repository = repository;
+        this.visitBeerRepository = visitBeerRepository;
     }
 
     public Visit findById(int visitId) {
@@ -58,6 +66,33 @@ public class VisitService {
         return repository.deleteById(visitId);
     }
 
+    public Result<List<Beer>> addBeer(VisitBeer visitBeer) {
+        Result<VisitBeer> result = validate(visitBeer);
+        if (!result.isSuccess()) {
+            return result;
+        }
+        if (!visitBeerRepository.add(visitBeer)) {
+            result.addMessage("beer not added", ResultType.INVALID);
+        }
+        return result;
+    }
+
+//    public Result<Void> updateVisit(VisitBeer visitBeer) {
+//        Result<Void> result = validate(visitBeer);
+//        if(!result.isSuccess()) {
+//            return  result;
+//        }
+//        if(!visitBeerRepository.update(visitBeer)) {
+//            String msg = String.format("update failed for visit id %s, beer id %s: not found", visitBeer.getVisit_id(), visitBeer.getBeer_id());
+//            result.addMessage(msg, ResultType.NOT_FOUND);
+//        }
+//        return result;
+//    }
+
+    public boolean deleteBeerById(int visitBeerId) {
+        return visitBeerRepository.deleteById(visitBeerId);
+    }
+
     private Result<Visit> validate(Visit visit) {
         Result<Visit> result = new Result<>();
         if (visit == null) {
@@ -71,5 +106,21 @@ public class VisitService {
             result.addMessage("user is required", ResultType.INVALID);
         }
         return result;
+    }
+
+    private Result<VisitBeer> validate(VisitBeer visitBeer) {
+        Result<VisitBeer> result = new Result<>();
+        if(visitBeer == null) {
+            result.addMessage("visitBeer cannot be null", ResultType.INVALID);
+            return result;
+        }
+        if(visitBeer.getBeer_id() < 0) {
+            result.addMessage("beer must exist", ResultType.INVALID);
+        }
+        if (visitBeer.getVisit_id() < 0) {
+            result.addMessage("visit must exist", ResultType.INVALID);
+        }
+        return result;
+
     }
 }

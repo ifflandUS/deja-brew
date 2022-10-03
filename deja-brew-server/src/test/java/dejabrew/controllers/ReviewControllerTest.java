@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.json.JsonMapper;
 import dejabrew.data.ReviewRepository;
 import dejabrew.models.Review;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,6 +16,7 @@ import org.springframework.test.web.servlet.RequestBuilder;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -47,7 +49,7 @@ class ReviewControllerTest {
         var request = post("/review")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(reviewJson)
-                .with(user("admin").roles("USER","ADMIN"));;
+                .with(user("admin").roles("USER","ADMIN"));
 
         mvc.perform(request)
                 .andExpect(status().isCreated())
@@ -77,31 +79,38 @@ class ReviewControllerTest {
 
     @Test
     void shouldReturn204WhenSuccessfulDelete() throws Exception {
-        int id = 4;
+        Mockito.when(repository.deleteById(4)).thenReturn(true);
 
-        when(repository.deleteById(id)).thenReturn(true);
-
-        mvc.perform( delete("/review/" + id) )
-                .andExpect( status().isNoContent() );
+        mvc.perform(delete("/review/4").with(user("admin").roles("USER","ADMIN")))
+                .andExpect(status().isNoContent());
     }
 
     @Test
     void shouldReturn404WhenNothingToDelete() throws Exception {
-        mvc.perform( delete("/review/10") )
-                .andExpect( status().isNotFound() );
+        mvc.perform(delete("/review/10").with(user("admin").roles("USER","ADMIN")))
+                .andExpect(status().isNotFound());
     }
 
     @Test
-    void shouldReturn204WhenUpdateIsSuccessful() throws Exception {
-        Review updateReview = new Review(1, 2,"Updated Brewery",4,"updated review");
+    void shouldReturnOkWhenUpdateIsSuccessful() throws Exception {
+        Review review = new Review(4,1, "new brewery", 4, "review" );
+        Review updatedReview = new Review(4,1, "new brewery", 4, "updated review" );
 
-        ObjectMapper mapper = new JsonMapper();
-        String requestBody = mapper.writeValueAsString(updateReview);
+        String update = jsonMapper(updatedReview);
 
-        when( repository.update( any() )).thenReturn(true);
+        when(repository.findById(review.getReviewId())).thenReturn(review);
+        when(repository.update(updatedReview)).thenReturn(true);
 
-        mvc.perform( put("/review/1").contentType(MediaType.APPLICATION_JSON).content(requestBody) )
-                .andExpect( status().isNoContent() );
+        RequestBuilder requestBuilder = put("/review/4")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(update)
+                .with(user("admin").roles("USER","ADMIN"));
+
+        mvc.perform(requestBuilder)
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().json(update))
+        ;
 
     }
 

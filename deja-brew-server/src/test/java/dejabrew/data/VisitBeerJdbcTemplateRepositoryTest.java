@@ -20,22 +20,16 @@ class VisitBeerJdbcTemplateRepositoryTest {
         knownGoodState.set();
     }
     @Test
-    void shouldAdd() {
+    void shouldAdd(){
         VisitBeer visitBeer = makeVisitBeer();
         assertTrue(repository.add(visitBeer));
-
-        try {
-            repository.add(visitBeer); // must fail
-            fail("cannot add an agent to an agency twice.");
-        } catch (DataAccessException ex) {
-            // this is expected.
-        }
     }
 
     @Test
     void shouldUpdate() {
         VisitBeer visitBeer = makeVisitBeer();
-        visitBeer.setVisit_beer_id(1); // avoid duplicates
+        visitBeer.setVisit_beer_id(1);
+        visitBeer.setVisit_id(1);
         visitBeer.setBeer_id(2);
         assertTrue(repository.update(visitBeer));
 
@@ -45,8 +39,8 @@ class VisitBeerJdbcTemplateRepositoryTest {
 
     @Test
     void shouldDelete() {
-        assertTrue(repository.deleteByKey(1, 3));
-        assertFalse(repository.deleteByKey(1, 3));
+        assertTrue(repository.deleteById(4));
+        assertFalse(repository.deleteById(4));
     }
 
 

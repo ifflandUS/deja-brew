@@ -43,7 +43,7 @@ public class ReviewController {
 
         Result<Review> result = service.update(review);
         if (result.isSuccess()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(result.getPayload(), HttpStatus.OK);
         }
 
         return ErrorResponse.build(result);
@@ -52,7 +52,7 @@ public class ReviewController {
     @DeleteMapping("/{reviewId}")
     public ResponseEntity<Void> deleteById(@PathVariable int reviewId) {
         if (service.deleteById(reviewId)) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }

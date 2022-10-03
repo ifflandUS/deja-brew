@@ -7,5 +7,5 @@ public interface VisitBeerRepository {
 
     boolean update(VisitBeer visitBeer);
 
-    boolean deleteByKey(int visitId, int beerId);
+    boolean deleteById(int visitBeerId);
 }

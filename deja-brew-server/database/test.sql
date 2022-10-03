@@ -27,7 +27,7 @@ create table visit (
         references app_user(app_user_id)
 );
 
-/* create table visit_beer (
+create table visit_beer (
     visit_beer_id int primary key auto_increment,
     visit_id int not null,
     beer_id int not null,
@@ -37,7 +37,7 @@ create table visit (
      constraint fk_visit_beer_beer_id
          foreign key (beer_id)
          references beer(beer_id)
-); */
+); 
 
 create table review(
     review_id int primary key auto_increment,
@@ -58,11 +58,12 @@ begin
     -- reset all of the tables
     delete from review;
     alter table review auto_increment = 1;
-    /* delete from visit_beer;
-    alter table visit_beer auto_increment = 1; */
+    delete from visit_beer;
+    alter table visit_beer auto_increment = 1;
     delete from visit;
     alter table visit auto_increment = 1;
-    truncate table beer;
+    delete from beer;
+    alter table beer auto_increment = 1;
     delete from app_user;
     alter table app_user auto_increment = 1;
 
@@ -86,7 +87,13 @@ begin
         (2, 2, "madtree-brewing-cincinnati", "2022-08-10"),
         (3, 3, "madtree-brewing-cincinnati", "2022-08-20"),
         (4, 3, "10-56-brewing-company-knox", "2022-08-25");
-
+	
+    insert into visit_beer
+		values
+        (1, 1, 1),
+        (2, 2, 2),
+        (3, 2, 1);
+    
     insert into review
         values
         (1, 1, "madtree-brewing-cincinnati", 4, "Test Review"),
