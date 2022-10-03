@@ -1,6 +1,7 @@
 import Brewery from "./Brewery";
 import { useHistory, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
+import './BrewPage.css';
 
 
 
@@ -50,6 +51,7 @@ function Singles() {
         
         <div className="container">   
             <h3>User reviews: </h3>
+            <button className="btn btn-sm btn-success float-right">Add a review</button>
         </div>
         
 
