@@ -7,6 +7,7 @@ import dejabrew.models.Visit;
 import dejabrew.models.VisitBeer;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -23,9 +24,9 @@ public class VisitService {
         return repository.findById(visitId);
     }
 
-//    public Visit findByBrewery(Brewery brewery) {
-//        return repository.findByBrewery(brewery);
-//    }
+    public Visit findByBrewery(String brewery) {
+        return repository.findByBrewery(brewery);
+    }
 
     public Result<Visit> add(Visit visit) {
         Result<Visit> result = validate(visit);
@@ -67,14 +68,16 @@ public class VisitService {
     }
 
     public Result<List<Beer>> addBeer(VisitBeer visitBeer) {
-        Result<VisitBeer> result = validate(visitBeer);
-        if (!result.isSuccess()) {
-            return result;
+        Result<List<Beer>> beerListResult = validate(visitBeer);
+        if (!beerListResult.isSuccess()) {
+            return beerListResult;
         }
         if (!visitBeerRepository.add(visitBeer)) {
-            result.addMessage("beer not added", ResultType.INVALID);
+            beerListResult.addMessage("beer not added", ResultType.INVALID);
         }
-        return result;
+        visitBeerRepository.add(visitBeer);
+        beerListResult.setPayload(new ArrayList<>());
+        return beerListResult;
     }
 
 //    public Result<Void> updateVisit(VisitBeer visitBeer) {
@@ -108,19 +111,19 @@ public class VisitService {
         return result;
     }
 
-    private Result<VisitBeer> validate(VisitBeer visitBeer) {
-        Result<VisitBeer> result = new Result<>();
+    private Result<List<Beer>> validate(VisitBeer visitBeer) {
+        Result<List<Beer>> visitBeerResult = new Result<>();
         if(visitBeer == null) {
-            result.addMessage("visitBeer cannot be null", ResultType.INVALID);
-            return result;
+            visitBeerResult.addMessage("visitBeer cannot be null", ResultType.INVALID);
+            return visitBeerResult;
         }
         if(visitBeer.getBeer_id() < 0) {
-            result.addMessage("beer must exist", ResultType.INVALID);
+            visitBeerResult.addMessage("beer must exist", ResultType.INVALID);
         }
         if (visitBeer.getVisit_id() < 0) {
-            result.addMessage("visit must exist", ResultType.INVALID);
+            visitBeerResult.addMessage("visit must exist", ResultType.INVALID);
         }
-        return result;
+        return visitBeerResult;
 
     }
 }

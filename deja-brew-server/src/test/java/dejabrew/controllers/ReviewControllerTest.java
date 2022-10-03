@@ -14,6 +14,9 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
@@ -57,18 +60,38 @@ class ReviewControllerTest {
     }
 
     @Test
-    void shouldReturn200WhenFoundFindById() throws Exception {
-        Review review = new Review(5, 3, "new brewery", 4, "testing review");
+    void shouldReturn200WhenFoundFindByBreweryId() throws Exception {
+        Review review = new Review(5, 3, "new-brewery", 4, "testing review");
         ObjectMapper mapper = new JsonMapper();
         String responseBody = mapper.writeValueAsString(review);
 
-        when(repository.findById(5)).thenReturn(review);
+        when(repository.findByBrewery("new-brewery")).thenReturn(review);
 
-        mvc.perform( get("/review/5") )
+
+        mvc.perform( get("/review/new-brewery") )
                 .andExpect( content().json(responseBody) )
                 .andExpect( status().isOk() )
                 .andExpect( content().contentType(MediaType.APPLICATION_JSON) );
 
+    }
+
+    @Test
+    void shouldReturn200WhenFoundFindByUser() throws Exception {
+        List<Review> reviews = new ArrayList<>();
+        ObjectMapper mapper = new JsonMapper();
+        String responseBody = mapper.writeValueAsString(reviews);
+
+        when(repository.findByUser(any())).thenReturn(reviews);
+
+        RequestBuilder requestBuilder = get("/review/app-user/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(responseBody)
+                .with(user("admin").roles("USER","ADMIN"));
+
+        mvc.perform( get("/review/app-user/1") )
+                .andExpect( content().json(responseBody) )
+                .andExpect( status().isOk() )
+                .andExpect( content().contentType(MediaType.APPLICATION_JSON) );
     }
 
     @Test

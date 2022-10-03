@@ -46,7 +46,7 @@ public class VisitBeerJdbcTemplateRepository implements VisitBeerRepository {
     public boolean deleteById(int visitBeerId) {
 
         final String sql = "delete from visit_beer "
-                + "where visit_beer_id = ?;";
+                + "where visit_id = ?;";
 
         return jdbcTemplate.update(sql, visitBeerId) > 0;
     }
