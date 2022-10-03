@@ -3,6 +3,7 @@ import Home from './components/Home';
 import Brewery from './components/Brewery';
 import BrewerySearch from './components/BrewerySearch';
 import NotFound from './components/NotFound';
+import Singles from './components/Singles';
 import Profile from './components/Profile';
 import ServerError from './components/ServerError';
 import { useState, useEffect } from "react";
@@ -78,6 +79,8 @@ function App() {
           <Switch>
             <Route exact path="/"><Home/></Route>
             <Route path="/BrewerySearch"><BrewerySearch/></Route>
+            <Route exact path = "/Brewery"><Brewery/></Route>
+            <Route path = {["/Brewery/"]}><Singles/></Route>
             <Route exact path="/error"><ServerError/></Route>
             <Route path="/Profile"><Profile/></Route>
             <Route path="/log-in"><Login/></Route>
@@ -86,7 +89,7 @@ function App() {
         </div>
 
 
-        <footer className="footer text-center text-lg-start bg-info">
+        <footer className="footer text-center text-lg-start bg-info ">
           <div className='text-center p-3'>© 2020 Copyright: Deja-Brew</div></footer>
         </Router>
     </div>

@@ -1,67 +1,57 @@
- import { useHistory } from "react-router-dom";
- import { useEffect, useState } from 'react';
- import BrewerySearch from "./BrewerySearch";
+  import { useState } from "react";
+import { useHistory } from "react-router-dom";
+import Singles from "./Singles";
+
+
 
 
 
  function Brewery({brewery}){
-    
+    const [reviews, setReviews] = useState([]);
     const history = useHistory();
     
-    const handleOnClick = () => {
-        const init = {
-          method: 'GET'
-        };
+
+    // useEffect(( )=>{
     
-        fetch(`https://api.openbrewerydb.org/breweries/${brewery.breweryId}`, init)
-        .then( resp => {
-          switch(resp.status) {
-            case 204:
-              return resp.json();
-            case 404:
-              history.push('/not-found', { id: brewery.breweryId })
-              break;
-            default:
-              return Promise.reject('Oops... something went wrong');
-          }
-        })
-        .then(resp => {
-          if (!resp) {
-            //success
+    // fetch(`http://localhost:3000/api/review/${brewery.id}`)
+    // .then(resp =>{
+    //     if (resp.status === 200){
+    //         return resp.json();
+    //     }
+    //     return Promise.reject('Oops...Something Happened.');
+    // })
+    // .then(data =>{
+    //     setReviews(data);
+    // })
+    // .catch(err => history.push('/error', {errorMessage: err}));
+
+    // },[])
+
     
-            //setBrewery(resp);
-          } else {
-            console.log(resp);
-          }
-        })
-        .catch(err => history.push('/error', {errorMessage: err}));
-      
-    }
+    const handleIndividual = () =>{
+      history.push(
+           `/Brewery/${brewery.id}` );
+        
+     }
+     return(<>
+    <tr>
+      <td>{brewery.name} <br/>* * * * *</td>
+      <td>{brewery.country}</td>
+      <td>{brewery.state}</td>
+      <td>{brewery.city}</td>
+      <td><button type="button" className="btn btn-success mr-3" onClick = {handleIndividual}>More...</button></td>
     
 
-
-    return(
-    <>
-            <div>
-                <div><h2>{brewery.breweryName}</h2>
-                <h3>{brewery.breweryCity}, {brewery.breweryState}, {brewery.breweryCountry}
-                <br/>{brewery.breweryAddress}
-                <br/>{brewery.breweryWebsite}</h3>
-                </div> 
-            </div>
+    </tr>
+        
+    
+    
+    
+    
+     </>)
 
 
 
-
-
-    </>
-
-
-    )
  }
-
-
-
-
 
  export default Brewery;
