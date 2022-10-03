@@ -1,6 +1,7 @@
 import { useContext } from "react";
 import AuthContext from "./AuthContext";
 import BrewMap from "./BrewMap"
+import UserVisits from "./UserVisits";
 
 function Profile(){
     const auth = useContext(AuthContext);
@@ -13,9 +14,7 @@ function Profile(){
             <h1>Cheers, {auth.user.username}!</h1>
             <BrewMap/>
             <h2>Recent Visits:</h2>
-            <div className="container">
-                
-            </div>
+            <UserVisits/>
         </>
         
     )
