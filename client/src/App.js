@@ -3,53 +3,97 @@ import Home from './components/Home';
 import Brewery from './components/Brewery';
 import BrewerySearch from './components/BrewerySearch';
 import NotFound from './components/NotFound';
+import Singles from './components/Singles';
 import Profile from './components/Profile';
 import ServerError from './components/ServerError';
-
-import Singles from './components/Singles';
-import logo from './db_logo.PNG';
+import { useState, useEffect } from "react";
+import AuthContext from "./components/AuthContext";
+import NavBar from './components/NavBar';
+import jwtDecode from 'jwt-decode';
 
 import './index.css';
+import Login from './components/Login';
+import CreateAccount from './components/CreateAccount';
 
+const LOCAL_STORAGE_TOKEN_KEY = "dejaBrewToken";
 
 function App() {
+
+  const [user, setUser] = useState(null);
+  const [restoreLoginAttemptCompleted, setRestoreLoginAttemptCompleted] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY);
+    if (token) {
+      login(token);
+    }
+    setRestoreLoginAttemptCompleted(true);
+  }, []);
+
+  const login = (token) => {
+    localStorage.setItem(LOCAL_STORAGE_TOKEN_KEY, token);
+
+    console.log(jwtDecode(token));
+
+    const { sub: username, authorities: authoritiesString, zipCode: zipCode} = jwtDecode(token);
+
+    const roles = authoritiesString.split(',');
+
+    const user = {
+      username,
+      zipCode,
+      roles,
+      token,
+      hasRole(role) {
+        return this.roles.includes(role);
+      }
+    };
+
+    setUser(user);
+    
+    return user;
+  };
+  
+  const logout = () => {
+    setUser(null);
+    localStorage.removeItem(LOCAL_STORAGE_TOKEN_KEY)
+  };
+  
+  const auth = {
+    user: user ? {...user} : null,
+    login,
+    logout
+  };
+
+  if (!restoreLoginAttemptCompleted) {
+    return null;
+  }
+
+
   return (
+    <AuthContext.Provider value={auth}>
     <div className="App">
       <Router>
-        <nav className="navbar navbar-dark navbar-expand-md bg-info">
-          <Link className='navbar-brand' to="/"><img src={logo} width="250" height="70"alt="Deja-Brew logo"/></Link>
-          <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
-            <span className="navbar-toggler-icon"></span>
-          </button>
-          <div className="collapse navbar-collapse" id="navbarText">
-            <ul className="navbar-nav mr-auto">
-              <li className="nav-item">
-                <Link to ="/" className='nav-link'>Home</Link>
-              </li>
-              <li className="nav-item"><Link to="/BrewerySearch" className='nav-link'>Brewery Search</Link></li>
-              <li className="nav-item">
-                <Link to="/Profile" className='nav-link'>Profile</Link>
-              </li>
-            </ul>
-          </div>
-        </nav>
-        <div className='container pb-2'>
+        <NavBar/>
+        <div className='container'>
           <Switch>
             <Route exact path="/"><Home/></Route>
-            <Route exact path="/BrewerySearch"><BrewerySearch/></Route>
+            <Route path="/BrewerySearch"><BrewerySearch/></Route>
             <Route exact path = "/Brewery"><Brewery/></Route>
             <Route path = {["/Brewery/"]}><Singles/></Route>
             <Route exact path="/error"><ServerError/></Route>
             <Route path="/Profile"><Profile/></Route>
-        
+            <Route path="/log-in"><Login/></Route>
+            <Route path="/create-account"><CreateAccount/></Route>
           </Switch>
         </div>
 
 
-        <footer className="footer text-center text-lg-start bg-info fixed-bottom">
+        <footer className="footer text-center text-lg-start bg-info ">
           <div className='text-center p-3'>© 2020 Copyright: Deja-Brew</div></footer>
         </Router>
     </div>
+    </AuthContext.Provider>
   );
 }
 
