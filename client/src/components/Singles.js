@@ -3,7 +3,7 @@ import { useHistory, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import './BrewPage.css';
 
-
+const REVIEW_DEFAULT = { reviewId: 0, userID: 0 , middleName: '', lastName: '', dob: '', review: ''}
 
 function Singles() {
 
@@ -16,6 +16,9 @@ function Singles() {
 
     const handleBack = ()=>{
         history.push(`/BrewerySearch`);
+    }
+    const writeReview = (e) =>{
+        
     }
 
     const handleLog = ()=>{
@@ -44,6 +47,15 @@ function Singles() {
     return(
         <>
         
+        <div>
+        <div>   
+          <h2>{brewery.name}</h2>
+          <h3>{reviews.rating}
+          <br/> {brewery.city}, {brewery.state}
+          <br/><a href = {brewery.website_url} target="_blank">{brewery.website_url}</a></h3>  
+        </div>
+        {/*image (working on the webscraping) */}
+        </div>
         
        
 
@@ -62,6 +74,9 @@ function Singles() {
         </div>
         
 
+        <h3>{brewery.name} Reviews</h3>
+        
+        <button type="button" className = "btn btn-primary mr3" onClick={writeReview}>write review</button>
 
         <button type="button" className="btn btn-success m-3 mx-auto d-flex" onClick={handleBack}>back to search</button>
         </>
