@@ -28,7 +28,7 @@ public class AppUserJdbcTemplateRepository implements AppUserRepository {
     public AppUser findByUsername(String username) {
         List<String> roles = getRolesByUsername(username);
 
-        final String sql = "select app_user_id, username, password_hash, disabled "
+        final String sql = "select app_user_id, zipcode, username, password_hash, disabled "
                 + "from app_user "
                 + "where username = ?;";
 
@@ -41,13 +41,14 @@ public class AppUserJdbcTemplateRepository implements AppUserRepository {
     @Transactional
     public AppUser create(AppUser user) {
 
-        final String sql = "insert into app_user (username, password_hash) values (?, ?);";
+        final String sql = "insert into app_user (zipcode, username, password_hash) values (?,?, ?);";
 
         GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
         int rowsAffected = jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            ps.setString(1, user.getUsername());
-            ps.setString(2, user.getPassword());
+            ps.setInt(1, user.getZipCode());
+            ps.setString(2, user.getUsername());
+            ps.setString(3, user.getPassword());
             return ps;
         }, keyHolder);
 
@@ -67,12 +68,13 @@ public class AppUserJdbcTemplateRepository implements AppUserRepository {
     public void update(AppUser user) {
 
         final String sql = "update app_user set "
+                + "zipcode = ?, "
                 + "username = ?, "
                 + "disabled = ? "
                 + "where app_user_id = ?";
 
         jdbcTemplate.update(sql,
-                user.getUsername(), !user.isEnabled(), user.getAppUserId());
+                user.getZipCode(), user.getUsername(), !user.isEnabled(), user.getAppUserId());
 
         updateRoles(user);
     }

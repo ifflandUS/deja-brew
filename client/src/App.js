@@ -32,12 +32,15 @@ function App() {
   const login = (token) => {
     localStorage.setItem(LOCAL_STORAGE_TOKEN_KEY, token);
 
-    const { sub: username, authorities: authoritiesString } = jwtDecode(token);
+    console.log(jwtDecode(token));
+
+    const { sub: username, authorities: authoritiesString, zipCode: zipCode} = jwtDecode(token);
 
     const roles = authoritiesString.split(',');
 
     const user = {
       username,
+      zipCode,
       roles,
       token,
       hasRole(role) {

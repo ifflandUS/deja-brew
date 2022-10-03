@@ -1,0 +1,17 @@
+
+.empty{
+background: none;
+}
+
+.mapboxgl-popup-content{
+    background-position: 100%;
+    background-image: url("/public/foam.gif");
+    
+}
+
+
+
+.map-container {
+    height: 500px;
+    justify-self: center;
+    }
