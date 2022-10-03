@@ -40,7 +40,7 @@ export default function BrewMap(){
         });
 
         if (map.current){
-            fetch(`https://api.openbrewerydb.org/breweries?by_postal=${auth.user.zipCode}`)
+            fetch(`https://api.openbrewerydb.org/breweries?by_dist=${lat},${lng}`)
             .then(response => response.json())
             .then(data => {
               for(let i = 0; i < data.length;i++){
