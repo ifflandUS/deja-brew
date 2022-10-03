@@ -41,10 +41,14 @@ class ReviewJdbcTemplateRepositoryTest {
     void shouldUpdate() {
         Review review = new Review();
         review.setReviewId(3);
+        review.setBreweryId("10-56-brewing-company-knox");
         review.setRating(5);
+        review.setReview("Updated Review");
         assertTrue(repository.update(review));
         review.setReviewId(16);
+        review.setBreweryId("10-56-brewing-company-knox");
         review.setRating(5);
+        review.setReview("Updated Review");
         assertFalse(repository.update(review));
     }
 
@@ -56,7 +60,7 @@ class ReviewJdbcTemplateRepositoryTest {
 
     Review makeReview() {
         Review review = new Review();
-        review.setUserId(5);
+        review.setUserId(2);
         review.setBreweryId("10-56-brewing-company-knox");
         review.setRating(4);
         review.setReview("Test");

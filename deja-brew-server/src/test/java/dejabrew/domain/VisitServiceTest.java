@@ -12,7 +12,7 @@ import java.time.LocalDate;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
+@SpringBootTest
 class VisitServiceTest {
     @Autowired
     VisitService service;
@@ -33,6 +33,7 @@ class VisitServiceTest {
         assertEquals(mockOut, actual.getPayload());
     }
 
+    @Test
     void shouldNotUpdate() {
         Visit visit = makeVisit();
         Result<Visit> actual = service.update(visit);
