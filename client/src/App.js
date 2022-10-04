@@ -94,7 +94,7 @@ function App() {
         </div>
 
 
-        <footer className="footer text-center text-lg-start bg-info ">
+        <footer className="footer text-center text-lg-start bg-info fixed-bottom">
           <div className='text-center p-3'>© 2020 Copyright: Deja-Brew</div></footer>
         </Router>
     </div>
