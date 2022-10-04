@@ -13,16 +13,18 @@ import Singles from "./Singles";
 
     useEffect(( )=>{
     
-    fetch(`http://localhost:3000/api/review/${brewery.id}`)
+    fetch(`http://localhost:8080/review/${brewery.id}`)
     .then(resp =>{
-        if (resp.status === 200){
-            return resp.json();
+        if (resp.status != 200){
+          return Promise.reject('Oops...Something Happened.');
         }
-        return Promise.reject('Oops...Something Happened.');
+        return resp.json();
     })
     .then(data =>{
+      if(data){
         setReviews(data);
-        brewery.reviews = reviews;
+        //brewery.reviews = reviews;
+      }
     })
     .catch(err => history.push('/error', {errorMessage: err}));
 

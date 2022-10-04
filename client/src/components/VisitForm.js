@@ -54,7 +54,6 @@ export default function VisitForm() {
         };
         fetch(`http://localhost:8080/visit`, init)
             .then(resp => {
-                console.log(resp.status)
                 switch(resp.status){
                     case 201:
                         return null;
