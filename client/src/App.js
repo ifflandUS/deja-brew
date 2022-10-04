@@ -11,6 +11,7 @@ import AuthContext from "./components/AuthContext";
 import NavBar from './components/NavBar';
 import jwtDecode from 'jwt-decode';
 import BeerForm from './components/BeerForm';
+import ReviewForm from './components/ReviewForm';
 
 import './index.css';
 import Login from './components/Login';
@@ -90,11 +91,12 @@ function App() {
             <Route path="/create-account"><CreateAccount/></Route>
             <Route path="/visit-form"><VisitForm/></Route>
             <Route path="/beer-form"><BeerForm/></Route>
+            <Route path="/writereview"><ReviewForm/></Route>
           </Switch>
         </div>
 
 
-        <footer className="footer text-center text-lg-start bg-info ">
+        <footer className="footer text-center text-lg-start bg-info fixed-bottom">
           <div className='text-center p-3'>© 2020 Copyright: Deja-Brew</div></footer>
         </Router>
     </div>
