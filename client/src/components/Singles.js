@@ -1,9 +1,9 @@
-import Brewery from "./Brewery";
+
+import Review from "./Review";
 import { useHistory, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import './BrewPage.css';
 
-const REVIEW_DEFAULT = { reviewId: 0, userID: 0 , middleName: '', lastName: '', dob: '', review: ''}
 
 function Singles() {
 
@@ -41,6 +41,24 @@ function Singles() {
             })
             .catch(err => console.log("Error:", err));
     },[]);
+    useEffect(( )=>{
+    
+        fetch(`http://localhost:8080/review/${location.state.breweryId}`)
+        .then(resp =>{
+            if (resp.status === 200){
+                return resp.json();
+            }
+            return Promise.reject('Oops...Something Happened.');
+        })
+        .then(data =>{
+            setReviews(data)
+    
+    
+        })
+        .catch(err => history.push('/error', {errorMessage: err}));
+    
+        },[])
+    
 
    const handleAdd = ()=> history.push('/writereview')
 
@@ -54,7 +72,7 @@ function Singles() {
           <h2>{brewery.name}</h2>
           <h3>{reviews.rating}
           <br/> {brewery.city}, {brewery.state}
-          <br/><a href = {brewery.website_url} target="_blank">{brewery.website_url}</a></h3>  
+          <br/><a href = {brewery.website_url} target="_blank" rel="noreferrer">{brewery.website_url}</a></h3>  
         </div>
         {/*image (working on the webscraping) */}
         </div>
@@ -65,14 +83,26 @@ function Singles() {
        {/*Are we still saving the ones the user has been to */}
        
     
-        {/*{<button type="button" className="btn btn-success mr-3" onClick={handleLog}>Log Visit</button>
-        <button type="button" className="btn btn-danger mr-3" >Never again</button>
-    <button type="button" className="btn btn-warning mr-3">Bucketlist</button></>*/}
-        
+        <button type="button" className="btn btn-success mr-3" onClick={handleLog}>Log Visit</button>
+       
         <div className="container">   
         <h3>{brewery.name} Reviews</h3>
             <button className="btn btn-sm btn-success float-right" onClick={handleAdd}>Add a review</button>  
         </div>
+
+        <div className="reviewTable">
+                <table className="table table-striped">
+                  <thead><tr>
+                  <th scope="col">Rating</th>
+                  <th scope="col">Review</th>
+              
+                  </tr></thead>
+
+              <tbody>
+           {reviews.map(review => <Review key={review.id} review={review} />)}
+           </tbody> 
+                </table>
+              </div>
         
         
         </>
