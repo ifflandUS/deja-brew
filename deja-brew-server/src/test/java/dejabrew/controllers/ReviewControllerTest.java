@@ -59,21 +59,21 @@ class ReviewControllerTest {
                 .andExpect(content().json(expectedJson));
     }
 
-    @Test
-    void shouldReturn200WhenFoundFindByBreweryId() throws Exception {
-        Review review = new Review(5, 3, "new-brewery", 4, "testing review");
-        ObjectMapper mapper = new JsonMapper();
-        String responseBody = mapper.writeValueAsString(review);
-
-        when(repository.findByBrewery("new-brewery")).thenReturn(review);
-
-
-        mvc.perform( get("/review/new-brewery") )
-                .andExpect( content().json(responseBody) )
-                .andExpect( status().isOk() )
-                .andExpect( content().contentType(MediaType.APPLICATION_JSON) );
-
-    }
+//    @Test
+//    void shouldReturn200WhenFoundFindByBreweryId() throws Exception {
+//        Review review = new Review(5, 3, "new-brewery", 4, "testing review");
+//        ObjectMapper mapper = new JsonMapper();
+//        String responseBody = mapper.writeValueAsString(review);
+//
+//        when(repository.findByBrewery("new-brewery")).thenReturn(review);
+//
+//
+//        mvc.perform( get("/review/new-brewery") )
+//                .andExpect( content().json(responseBody) )
+//                .andExpect( status().isOk() )
+//                .andExpect( content().contentType(MediaType.APPLICATION_JSON) );
+//
+//    }
 
     @Test
     void shouldReturn200WhenFoundFindByUser() throws Exception {

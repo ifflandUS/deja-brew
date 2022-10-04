@@ -1,4 +1,4 @@
-  import { useState } from "react";
+  import { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import Singles from "./Singles";
 
@@ -11,23 +11,22 @@ import Singles from "./Singles";
     const history = useHistory();
     
 
-    // useEffect(( )=>{
+    useEffect(( )=>{
     
-    // fetch(`http://localhost:3000/api/review/${brewery.id}`)
-    // .then(resp =>{
-    //     if (resp.status === 200){
-    //         return resp.json();
-    //     }
-    //     return Promise.reject('Oops...Something Happened.');
-    // })
-    // .then(data =>{
-    //     setReviews(data);
+    fetch(`http://localhost:3000/api/review/${brewery.id}`)
+    .then(resp =>{
+        if (resp.status === 200){
+            return resp.json();
+        }
+        return Promise.reject('Oops...Something Happened.');
+    })
+    .then(data =>{
+        setReviews(data);
+        brewery.reviews = reviews;
+    })
+    .catch(err => history.push('/error', {errorMessage: err}));
 
-    //     for()
-    // })
-    // .catch(err => history.push('/error', {errorMessage: err}));
-
-    // },[])
+    },[])
 
     
     const handleIndividual = () =>{
