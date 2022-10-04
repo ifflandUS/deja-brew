@@ -30,15 +30,13 @@ export default function UserVisits() {
             .catch(err => console.log("Error:", err));
     },[]);
 
-    useEffect(() => {
-        console.log(visits);
-      }, [visits]);
 
     return (
        
         <div className="container">
               <ul className='list-group'>
-                {visits.map(visit => <Visit key={visit.visitId} visit={visit}/> )}
+                {visits.length > 1 && visits.map(visit => <Visit key={visit.visitId} visit={visit}/> )}
+                {visits.length <1 && <p>Get out there and drink some beer!</p>}
             </ul>             
         </div>
         
