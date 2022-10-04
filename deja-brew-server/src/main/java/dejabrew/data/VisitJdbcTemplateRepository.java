@@ -34,12 +34,23 @@ public class VisitJdbcTemplateRepository implements VisitRepository {
     }
 
     @Override
+    public Visit findByBrewery(String breweryId) {
+        final String sql = "select * "
+                + "from visit "
+                + "where brewery_id = ?;";
+
+        return jdbcTemplate.query(sql, new VisitMapper(), breweryId).stream()
+                .findFirst()
+                .orElse(null);
+    }
+
     public List<Visit> findByUser(AppUser user) {
         final String sql = "select * "
                 + "from visit "
                 + "where app_user_id = ?;";
 
         return jdbcTemplate.query(sql, new VisitMapper(),user.getAppUserId());
+
 
     }
 

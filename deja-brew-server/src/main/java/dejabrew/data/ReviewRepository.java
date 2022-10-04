@@ -3,12 +3,14 @@ package dejabrew.data;
 import dejabrew.models.AppUser;
 import dejabrew.models.Review;
 
+import java.util.List;
+
 public interface ReviewRepository {
     Review findById(int reviewId);
 
-    Review findByBrewery(String breweryId);
+    List<Review> findByBrewery(String breweryId);
 
-    Review findByUser(AppUser user);
+    List<Review> findByUser(AppUser appUser);
 
     Review add(Review review);
 

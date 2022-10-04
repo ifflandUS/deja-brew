@@ -1,8 +1,11 @@
 package dejabrew.domain;
 
 import dejabrew.data.ReviewRepository;
+import dejabrew.models.AppUser;
 import dejabrew.models.Review;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class ReviewService {
@@ -17,13 +20,13 @@ public class ReviewService {
         return repository.findById(reviewId);
     }
 
-//    public Review findByBrewery(Brewery brewery) {
-//        return repository.findByBrewery(brewery);
-//    }
-//
-//    public Review findByUser(User user) {
-//        return repository.findByUser(user);
-//    }
+    public List<Review> findByBrewery(String breweryId) {
+        return repository.findByBrewery(breweryId);
+    }
+
+    public List<Review> findByUser(AppUser appUser) {
+        return repository.findByUser(appUser);
+    }
 
     public Result<Review> add(Review review) {
         Result<Review> result = validate(review);

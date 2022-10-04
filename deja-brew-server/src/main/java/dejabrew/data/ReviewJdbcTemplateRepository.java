@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.util.List;
 
 @Repository
 public class ReviewJdbcTemplateRepository implements ReviewRepository {
@@ -35,26 +36,22 @@ public class ReviewJdbcTemplateRepository implements ReviewRepository {
 
 
     @Override
-    public Review findByBrewery(String breweryId) {
+    public List<Review> findByBrewery(String breweryId) {
         final String sql = "select *"
                 + "from review "
                 + "where brewery_id = ?;";
 
-        return jdbcTemplate.query(sql, new ReviewMapper(), breweryId).stream()
-                .findFirst()
-                .orElse(null);
+        return jdbcTemplate.query(sql, new ReviewMapper(), breweryId);
     }
 
 
     @Override
-    public Review findByUser(AppUser appUser) {
+    public List<Review> findByUser(AppUser appUser) {
         final String sql = "select *"
                 + "from review "
                 + "where app_user_id = ?;";
 
-        return jdbcTemplate.query(sql, new ReviewMapper(), appUser.getAppUserId()).stream()
-                .findFirst()
-                .orElse(null);
+        return jdbcTemplate.query(sql, new ReviewMapper(), appUser.getAppUserId()).stream().toList();
     }
 
     @Override
