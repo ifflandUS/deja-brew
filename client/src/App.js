@@ -12,6 +12,7 @@ import NavBar from './components/NavBar';
 import jwtDecode from 'jwt-decode';
 import BeerForm from './components/BeerForm';
 import ReviewForm from './components/ReviewForm';
+
 import Review from './components/Review';
 
 import './index.css';
@@ -93,7 +94,9 @@ function App() {
             <Route path="/visit-form"><VisitForm/></Route>
             <Route path="/beer-form"><BeerForm/></Route>
             <Route path="/writereview"><ReviewForm/></Route>
+
             <Route path ="/Review"><Review/></Route>
+
           </Switch>
         </div>
 

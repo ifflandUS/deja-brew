@@ -62,11 +62,13 @@ export default function CreateAccount(){
             
             switch(name){
                 case "username":
+                    setUsername(value)
                     if (!value) {
                         stateObj[name] = "Please enter Username.";
                       }
                     break;
                 case "password":
+                    setPassword(value)
                     if (!value){
                         stateObj[name] = "Please enter Password."
                     } else if(value !== confirmPassword){
@@ -76,6 +78,7 @@ export default function CreateAccount(){
                     }
                     break;
                 case "confirmPassword":
+                    setConfirmPassword(value)
                     if (!value){
                         stateObj[name] = "Please enter Password."
                     } else if(value !== password){
@@ -84,6 +87,18 @@ export default function CreateAccount(){
                         stateObj["confirmPassword"] = confirmPassword ? "" : errors.confirmPassword;
                     }
                     break;
+                    case "zipcode":
+                        setZipcode(value)
+                        console.log(value);
+                        if (!value){
+                            stateObj[name] = "Please enter zipcode."
+                        } else if (value.match(/^[0-9]+$/) == null){
+                            stateObj["zipcode"] = "Zipcode must only contain numbers.";
+                        }
+                         else if(value.length<5 || value.length > 5){
+                            stateObj["zipcode"] = "Enter a valid 5 digit zipcode."
+                         }
+                        break;
                 default:
                     break;
             }
@@ -100,10 +115,9 @@ export default function CreateAccount(){
           <label htmlFor="username">Username:</label>
           <input
             type="text"
-            onChange={(event) => setUsername(event.target.value)}
             id="username"
             name="username"
-            onBlur={handleErrors}
+            onChange={handleErrors}
           />
           <br></br>
             {errors.username && <span className='font-weight-light text-danger text-center'><small>{errors.username}</small></span>}
@@ -112,10 +126,9 @@ export default function CreateAccount(){
           <label htmlFor="password">Password:</label>
           <input
             type="password"
-            onChange={(event) => setPassword(event.target.value)}
             id="password"
             name="password"
-            onBlur={handleErrors}
+            onChange={handleErrors}
           />
           <br></br>
           {errors.password && <span className='font-weight-light text-danger text-center'><small>{errors.password}</small></span>}
@@ -124,10 +137,9 @@ export default function CreateAccount(){
           <label htmlFor="confirmPassword">Confirm Password:</label>
           <input
             type="password"
-            onChange={(event) => setConfirmPassword(event.target.value)}
             id="confirmPassword"
             name="confirmPassword"
-            onBlur={handleErrors}
+            onChange={handleErrors}
           />
           <br></br>
           {errors.confirmPassword && <span className='font-weight-light text-danger text-center'><small>{errors.confirmPassword}</small></span>}
@@ -136,13 +148,12 @@ export default function CreateAccount(){
           <label htmlFor="zipcode">Zipcode:</label>
           <input
             type="text"
-            onChange={(event) => setZipcode(event.target.value)}
             id="zipcode"
             name="zipcode"
-            onBlur={handleErrors}
+            onChange={handleErrors}
           />
           <br></br>
-          {errors.confirmPassword && <span className='font-weight-light text-danger text-center'><small>{errors.confirmPassword}</small></span>}
+          {errors.zipcode && <span className='font-weight-light text-danger text-center'><small>{errors.zipcode}</small></span>}
         </div>
         <div>
           <button className="btn btn-info m-2 mx-auto" 

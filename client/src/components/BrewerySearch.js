@@ -16,8 +16,8 @@ function BrewerySearch(){
       const init = {
         method: "GET",
         headers: {
-            "Content-Type": "application/json"
-            //"Accept": "application/json"
+            "Content-Type": "application/json",
+            "Accept": "application/json"
         },
         
         
@@ -27,6 +27,7 @@ function BrewerySearch(){
       .then( resp =>{
       switch(resp.status){
         case 200:
+          console.log(resp)
           return resp.json();
       } return Promise.reject('Oops... something went wrong.');
 

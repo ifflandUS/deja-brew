@@ -1,6 +1,7 @@
 import React, { useContext, useState } from "react";
 import { useHistory } from "react-router-dom";
 import AuthContext from "./AuthContext";
+import Error from "./Error";
 
 
 export default function Login() {
@@ -27,7 +28,7 @@ export default function Login() {
         auth.login(jwt_token);
         history.push("/");
     } else if (response.status === 403) {
-        setErrors(["Login failed."]);
+        setErrors(["Invalid username/password."]);
     } else {
         setErrors(["Unknown error."]);
     }
@@ -39,9 +40,12 @@ export default function Login() {
 
   return (
     <div>
+      
      <h1 className="text-center">Login</h1>
-     <div className="col-3 border m-4 mx-auto d-flex justify-self-center text-center">
+     
+     <div className="col-3 border m-4 mx-auto d-flex justify-self-center text-center"> 
       <form  onSubmit={handleSubmit}>
+      {errors.length > 0 ? <Error errors={errors}/> : ""}
         <div>
           <label htmlFor="username">Username:</label>
           <input

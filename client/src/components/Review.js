@@ -1,11 +1,9 @@
 
-
-
-
 function Review({review}){
 
     return(
-    <tr>
+    <tr key={review.id}>
+
       <td>{review.rating}</td>
       <td>{review.review}</td>
     </tr>

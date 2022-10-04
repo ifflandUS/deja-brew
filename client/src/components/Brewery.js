@@ -9,7 +9,6 @@ import { useHistory } from "react-router-dom";
     const [reviews, setReviews] = useState([]);
     const history = useHistory();
     
-
     
     const handleIndividual = () =>{
       history.push({ 
