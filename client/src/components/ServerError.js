@@ -1,4 +1,5 @@
 import { useHistory } from "react-router-dom";
+//import {PBR} from '/test_images/images.jpg';
 
 function ServerError() {
 
@@ -8,7 +9,7 @@ function ServerError() {
 
   return(<>
     <h2>Our bad... PBR on us</h2>
-    <img src="images.jpg" alt="Pabst Blue Ribbon "/>
+    <img src='' alt="Pabst Blue Ribbon "/>
     {errorMessage && (<div className="alert alert-danger">{`${errorMessage}`}</div>)}
   </>)
 }
