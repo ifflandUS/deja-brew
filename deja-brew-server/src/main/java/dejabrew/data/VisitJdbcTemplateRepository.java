@@ -1,7 +1,9 @@
 package dejabrew.data;
 
+import dejabrew.data.mappers.BeerMapper;
 import dejabrew.data.mappers.VisitMapper;
 import dejabrew.models.AppUser;
+import dejabrew.models.Beer;
 import dejabrew.models.Visit;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -16,9 +18,11 @@ import java.util.List;
 @Repository
 public class VisitJdbcTemplateRepository implements VisitRepository {
     private final JdbcTemplate jdbcTemplate;
+    private final VisitBeerRepository vbRepo;
 
-    public VisitJdbcTemplateRepository(JdbcTemplate jdbcTemplate) {
+    public VisitJdbcTemplateRepository(JdbcTemplate jdbcTemplate, VisitBeerRepository vbRepo) {
         this.jdbcTemplate = jdbcTemplate;
+        this.vbRepo = vbRepo;
     }
 
     @Override
@@ -39,7 +43,12 @@ public class VisitJdbcTemplateRepository implements VisitRepository {
                 + "from visit "
                 + "where app_user_id = ?;";
 
-        return jdbcTemplate.query(sql, new VisitMapper(),user.getAppUserId());
+        List<Visit> visits = jdbcTemplate.query(sql, new VisitMapper(),user.getAppUserId());
+        for (Visit visit : visits){
+            setVisitBeers(visit);
+        }
+
+        return visits;
 
     }
 
@@ -62,6 +71,12 @@ public class VisitJdbcTemplateRepository implements VisitRepository {
         if (rowsAffected <= 0) {
             return null;
         }
+
+
+        for (Beer beer : visit.getBeerList()) {
+            vbRepo.add(keyHolder.getKey().intValue(), beer.getBeerId());
+        }
+
         visit.setVisitId(keyHolder.getKey().intValue());
         return visit;
     }
@@ -86,5 +101,15 @@ public class VisitJdbcTemplateRepository implements VisitRepository {
         return jdbcTemplate.update(
                 "delete from visit where visit_id = ?", visitId) > 0;
     }
+
+    private void setVisitBeers(Visit visit){
+        final String sql = "select b.beer_id, beer_name, abv, `type`, brewery_id from beer b"
+        + " join visit_beer v on v.beer_id = b.beer_id"
+        + " where v.visit_id = ?;";
+
+         visit.setBeerList(jdbcTemplate.query(sql, new BeerMapper(), visit.getVisitId()));
+    }
+
+
 
 }

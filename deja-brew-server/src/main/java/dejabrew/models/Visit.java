@@ -22,12 +22,14 @@ public class Visit {
 
     }
 
-    public Visit(int visitId, int userId, String breweryId, LocalDate date) {
+    public Visit(int visitId, int userId, String breweryId, LocalDate date, List<Beer> beerList) {
         this.visitId = visitId;
         this.userId = userId;
         this.breweryId = breweryId;
         this.date = date;
+        this.beerList = beerList;
     }
+
 
     public int getVisitId() {
         return visitId;

@@ -25,6 +25,18 @@ public class VisitBeerJdbcTemplateRepository implements VisitBeerRepository {
                 visitBeer.getBeer_id()) > 0;
     }
 
+    @Override
+    public boolean add(int visit_id, int beer_id) {
+
+        final String sql = "insert into visit_beer (visit_id, beer_id) "
+                + "values "
+                + "(?,?);";
+
+        return jdbcTemplate.update(sql,
+                visit_id,
+                beer_id) > 0;
+    }
+
 
     @Override
     public boolean update(VisitBeer visitBeer) {

@@ -50,9 +50,6 @@ create table visit_beer (
     visit_beer_id int primary key auto_increment,
     visit_id int not null,
     beer_id int not null,
-    beer_count int not null,
-     constraint pk_visit_beer
-         primary key (visit_id, beer_id),
      constraint fk_visit_beer_visit_id
          foreign key (visit_id)
          references visit(visit_id),
