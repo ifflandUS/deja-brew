@@ -53,7 +53,7 @@ function Singles() {
           <h2>{brewery.name}</h2>
           <h3>{reviews.rating}
           <br/> {brewery.city}, {brewery.state}
-          <br/><a href = {brewery.website_url} target="_blank">{brewery.website_url}</a></h3>  
+          <br/><a href = {brewery.website_url} target="_blank" rel="noreferrer">{brewery.website_url}</a></h3>  
         </div>
         {/*image (working on the webscraping) */}
         </div>
