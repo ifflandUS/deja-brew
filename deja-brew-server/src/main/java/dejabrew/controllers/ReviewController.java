@@ -4,9 +4,12 @@ import dejabrew.domain.Result;
 import dejabrew.domain.ReviewService;
 import dejabrew.models.AppUser;
 import dejabrew.models.Review;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @CrossOrigin(origins = {"http://localhost:3000"})
@@ -18,13 +21,19 @@ public class ReviewController {
         this.service = service;
     }
 
-    @GetMapping("/{reviewId}")
-    public ResponseEntity<Review> findById(@PathVariable int reviewId, @RequestHeader(name = "authorization")AppUser user) {
-        Review review = service.findById(reviewId);
-        if (review == null) {
+    @GetMapping("/{breweryId}")
+    public ResponseEntity<List<Review>> findByBrewery(@PathVariable String breweryId) {
+        List<Review> reviews= service.findByBrewery(breweryId);
+        return new ResponseEntity<>(reviews, HttpStatus.OK);
+    }
+
+    @GetMapping("/app-user/{appUserId}")
+    public ResponseEntity<?> findByUser(@RequestHeader(name = "authorization")AppUser appUser){
+        List<Review> reviews = service.findByUser(appUser);
+        if (reviews == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return ResponseEntity.ok(review);
+        return new ResponseEntity<>(reviews, HttpStatus.OK);
     }
 
     @PostMapping
