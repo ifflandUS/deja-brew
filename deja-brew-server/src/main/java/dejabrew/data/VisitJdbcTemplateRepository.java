@@ -13,7 +13,9 @@ import org.springframework.stereotype.Repository;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Repository
 public class VisitJdbcTemplateRepository implements VisitRepository {
@@ -58,7 +60,7 @@ public class VisitJdbcTemplateRepository implements VisitRepository {
             setVisitBeers(visit);
         }
 
-        return visits;
+        return visits.stream().sorted(Comparator.comparing(Visit::getDate).reversed()).collect(Collectors.toList());
 
 
     }

@@ -69,9 +69,10 @@ export default function VisitForm() {
             })
             .then(body => {
                 if (!body){
+                    console.log(location.state.brewery)
                   history.push({ 
-                    pathname: `/visit-form` ,
-                    state: {brewery: location.state.brewery}
+                    pathname: `/Brewery/${location.state.brewery.id}` ,
+                    state: {breweryId: location.state.brewery.id}
                    });
                 } else {
                     console.log(body)

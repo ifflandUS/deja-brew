@@ -1,0 +1,8 @@
+.alert-trim {
+    display: inline-block;
+    text-align: center;
+    padding: 1%;
+    padding-bottom: 0%;
+    margin: 5px;
+    bottom: 0%;
+  }
