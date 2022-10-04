@@ -3,6 +3,8 @@ package dejabrew.controllers;
 import dejabrew.domain.Result;
 import dejabrew.domain.ResultType;
 import dejabrew.domain.VisitService;
+import dejabrew.models.AppUser;
+import dejabrew.models.Review;
 import dejabrew.models.Visit;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
@@ -26,6 +28,12 @@ public class VisitController {
     @GetMapping("/{visitId}")
     public Visit findById(@PathVariable int visitId) throws DataAccessException {
         return service.findById(visitId);
+    }
+
+    @GetMapping
+    public List<Visit> findByUser(@RequestHeader(name = "authorization") AppUser user) {
+
+        return service.findByUser(user);
     }
 
     @PostMapping

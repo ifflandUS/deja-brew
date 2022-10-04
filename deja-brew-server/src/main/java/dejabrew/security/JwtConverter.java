@@ -54,8 +54,8 @@ public class JwtConverter {
 
             String username = jws.getBody().getSubject();
             String authStr = (String) jws.getBody().get("authorities");
-            int userId = Integer.parseInt((String) jws.getBody().get("appUserId"));
-            int zipCode = Integer.parseInt((String) jws.getBody().get("zipCode"));
+            int userId = (int) jws.getBody().get("appUserId");
+            int zipCode = (int) jws.getBody().get("zipCode");
 
             List<GrantedAuthority> authorities = Arrays.stream(authStr.split(","))
                     .map(i -> new SimpleGrantedAuthority(i))

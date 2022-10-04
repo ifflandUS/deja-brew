@@ -1,6 +1,7 @@
 package dejabrew.data;
 
 import dejabrew.data.mappers.VisitMapper;
+import dejabrew.models.AppUser;
 import dejabrew.models.Visit;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.util.List;
 
 @Repository
 public class VisitJdbcTemplateRepository implements VisitRepository {
@@ -40,6 +42,16 @@ public class VisitJdbcTemplateRepository implements VisitRepository {
         return jdbcTemplate.query(sql, new VisitMapper(), breweryId).stream()
                 .findFirst()
                 .orElse(null);
+    }
+
+    public List<Visit> findByUser(AppUser user) {
+        final String sql = "select * "
+                + "from visit "
+                + "where app_user_id = ?;";
+
+        return jdbcTemplate.query(sql, new VisitMapper(),user.getAppUserId());
+
+
     }
 
 

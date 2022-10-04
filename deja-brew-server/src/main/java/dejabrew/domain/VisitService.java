@@ -2,6 +2,7 @@ package dejabrew.domain;
 
 import dejabrew.data.VisitBeerRepository;
 import dejabrew.data.VisitRepository;
+import dejabrew.models.AppUser;
 import dejabrew.models.Beer;
 import dejabrew.models.Visit;
 import dejabrew.models.VisitBeer;
@@ -28,7 +29,11 @@ public class VisitService {
         return repository.findByBrewery(brewery);
     }
 
-    public Result<Visit> add(Visit visit) {
+    public List<Visit> findByUser(AppUser user) {
+        return repository.findByUser(user);
+    }
+
+    public Result<Visit> add (Visit visit){
         Result<Visit> result = validate(visit);
         if (!result.isSuccess()) {
             return result;
@@ -44,30 +49,30 @@ public class VisitService {
         return result;
     }
 
-    public Result<Visit> update(Visit visit) {
+    public Result<Visit> update (Visit visit){
         Result<Visit> result = validate(visit);
         if (!result.isSuccess()) {
             return result;
         }
 
-        if (visit.getVisitId() <= 0) {
-            result.addMessage("reviewId must be set for `update` operation", ResultType.INVALID);
+            if (visit.getVisitId() <= 0) {
+                result.addMessage("reviewId must be set for `update` operation", ResultType.INVALID);
+                return result;
+            }
+
+            if (!repository.update(visit)) {
+                String msg = String.format("reviewId: %s, not found", visit.getVisitId());
+                result.addMessage(msg, ResultType.NOT_FOUND);
+            }
+
             return result;
-        }
-
-        if (!repository.update(visit)) {
-            String msg = String.format("reviewId: %s, not found", visit.getVisitId());
-            result.addMessage(msg, ResultType.NOT_FOUND);
-        }
-
-        return result;
     }
-
-    public boolean deleteById(int visitId) {
+    public boolean deleteById ( int visitId){
         return repository.deleteById(visitId);
     }
 
-    public Result<List<Beer>> addBeer(VisitBeer visitBeer) {
+
+    public Result<List<Beer>> addBeer (VisitBeer visitBeer){
         Result<List<Beer>> beerListResult = validate(visitBeer);
         if (!beerListResult.isSuccess()) {
             return beerListResult;
@@ -79,6 +84,7 @@ public class VisitService {
         beerListResult.setPayload(new ArrayList<>());
         return beerListResult;
     }
+
 
 //    public Result<Void> updateVisit(VisitBeer visitBeer) {
 //        Result<Void> result = validate(visitBeer);
@@ -92,11 +98,11 @@ public class VisitService {
 //        return result;
 //    }
 
-    public boolean deleteBeerById(int visitBeerId) {
+    public boolean deleteBeerById ( int visitBeerId){
         return visitBeerRepository.deleteById(visitBeerId);
     }
 
-    private Result<Visit> validate(Visit visit) {
+    private Result<Visit> validate (Visit visit){
         Result<Visit> result = new Result<>();
         if (visit == null) {
             result.addMessage("visit cannot be null", ResultType.INVALID);
@@ -111,19 +117,19 @@ public class VisitService {
         return result;
     }
 
-    private Result<List<Beer>> validate(VisitBeer visitBeer) {
+    private Result<List<Beer>> validate (VisitBeer visitBeer) {
         Result<List<Beer>> visitBeerResult = new Result<>();
-        if(visitBeer == null) {
+        if (visitBeer == null) {
             visitBeerResult.addMessage("visitBeer cannot be null", ResultType.INVALID);
             return visitBeerResult;
         }
-        if(visitBeer.getBeer_id() < 0) {
+        if (visitBeer.getBeer_id() < 0) {
             visitBeerResult.addMessage("beer must exist", ResultType.INVALID);
         }
         if (visitBeer.getVisit_id() < 0) {
             visitBeerResult.addMessage("visit must exist", ResultType.INVALID);
         }
         return visitBeerResult;
-
+        }
     }
-}
+
