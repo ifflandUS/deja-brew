@@ -123,6 +123,4 @@ public class VisitJdbcTemplateRepository implements VisitRepository {
          visit.setBeerList(jdbcTemplate.query(sql, new BeerMapper(), visit.getVisitId()));
     }
 
-
-
 }

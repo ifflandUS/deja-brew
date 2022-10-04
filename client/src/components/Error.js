@@ -1,5 +1,6 @@
 import './Error.css';
 
+
 export default function Error({errors =[]}){
     console.log(errors);
     return (
