@@ -1,12 +1,16 @@
 import { useEffect, useState } from 'react';
-import { useHistory, useParams } from 'react-router-dom';
+import { useHistory, useParams, useLocation } from 'react-router-dom';
 import Error from './Error';
+import { useContext } from "react";
+import AuthContext from "./AuthContext";
 
-const REVIEW_DEFAULT = {reviewId:0, appUserId:0, breweryId:'', rating:0, review:''}
+const REVIEW_DEFAULT = {reviewId:0, userId:0, breweryId:'', rating:0, review:''}
 function ReviewForm(){
     const [review, setReview] = useState(REVIEW_DEFAULT);
     const [errors, setErrors] = useState([]);
     const history = useHistory();
+    const auth = useContext(AuthContext);
+    const location = useLocation();
 
     const handleChange = (e) => {
         const property = e.target.name;
@@ -14,38 +18,62 @@ function ReviewForm(){
         const value = e.target[valueType];
         const newReview = {...review};
         newReview[property] = value;
-    setReview(newReview);
+        setReview(newReview);
     }
 
     const handleCancel = () => history.goBack();
 
     const onSubmit = (e) => {
         e.preventDefault();
+        const newReview = {...review};
+        newReview["breweryId"] = location.state.brewery.id;
+        newReview["userId"] = auth.user.userId;
+       
+
+
+
+
         const init = {
-            method: 'POST',
+            method: "POST",
             headers: {
-              'Content-Type': 'application/json'
+              "Content-Type" : "application/json",
+              "Accept": "application/json",
+              "Authorization": `Bearer ${auth.user.token}`
             },
-            body: JSON.stringify({...review})
+            body: JSON.stringify(newReview)
           };
 
+
         fetch('http://localhost:8080/review',init)
-        .then(resp => {if(resp.status===201 || resp.status===400){
+        .then(resp => {
+            if(resp.status===201){
+            history.push({ 
+                pathname: `/Brewery/${location.state.brewery.id}` ,
+                state: {breweryId: location.state.brewery.id}
+               });
+            return {};
+        }
+            else if(resp.status===400) {
             return resp.json;
         }
         return Promise.reject('Yikes, something went wrong.');
         })
         .then(body=>{
             if(body.id){
-                history.goBack();
+                history.push({ 
+                    pathname: `/Brewery/${location.state.brewery.id}` ,
+                    state: {breweryId: location.state.brewery.id}
+                   });
             }
             else{
                 setErrors(body);
             }}).catch(err=>history.push('/error',{errorMessage:err}));
 
-        history.goBack();    
+        // history.push({ 
+        //     pathname: `/Brewery/${location.state.brewery.id}` ,
+        //     state: {breweryId: location.state.brewery.id}
+        //    });    
     }
-
     const ratingClick = (e) =>(
         e.preventDefault()
     
@@ -70,21 +98,19 @@ function ReviewForm(){
         // }
 
     )
-
         return(<>
         <h2>Write A Review</h2>
         {errors.length > 0 ? <Error errors={errors} /> : null}
         <form onSubmit={onSubmit}>
-            <div className='form-group'>
+           {/* <div className='form-group'>
                 <label htmlFor='rating'>Rate This Brewery 1-5</label>
-
                 <input name='rating1' type='radio' className='form-Control' id='rating' value={review.rating} onClick={ratingClick} onChange = {handleChange}>image</input>
                 <input name='rating2' type='radio' className='form-Control' id='rating' value={review.rating} onClick={ratingClick} onChange = {handleChange}>image</input>
                 <input name='rating3' type='radio' className='form-Control' id='rating' value={review.rating} onClick={ratingClick} onChange = {handleChange}>image</input>
                 <input name='rating4' type='radio' className='form-Control' id='rating' value={review.rating} onClick={ratingClick} onChange = {handleChange}>image</input>
                 <input name='rating' type='radio' className='form-Control' id='rating' value={review.rating} onClick={ratingClick} onChange = {handleChange}>image</input>
         
-            </div>
+            </div>*/}
 
 
             <div className='form-group'>
@@ -96,7 +122,7 @@ function ReviewForm(){
    <input name='review' type='text' className='form-control' id='review' value={review.review} onChange={handleChange}/></div>
                 <div className='form-group'>
                     <button type='Submit' className='btn btn-success mr-3'>Submit</button>
-                    <button type='Cancel' className='btn btn-danger'>Cancel</button>
+                    <button type='Cancel' className='btn btn-danger' onClick={handleCancel}>Cancel</button>
                 </div></form></>)
 }
 export default ReviewForm;
