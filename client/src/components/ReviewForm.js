@@ -42,7 +42,9 @@ function ReviewForm(){
             },
             body: JSON.stringify(newReview)
           };
-        fetch(`http://localhost:8080/review`,init)
+
+
+        fetch('http://localhost:8080/review',init)
         .then(resp => {if(resp.status===201 || resp.status===400){
             return resp.json;
         }
@@ -100,15 +102,16 @@ function ReviewForm(){
                 <input name='rating4' type='radio' className='form-Control' id='rating' value={review.rating} onClick={ratingClick} onChange = {handleChange}>image</input>
                 <input name='rating' type='radio' className='form-Control' id='rating' value={review.rating} onClick={ratingClick} onChange = {handleChange}>image</input>
         
-        </div>*/}
+            </div>*/}
 
 
             <div className='form-group'>
                 <label htmlFor='review'>Give us your experience</label>
-                <input name='review' type='text' className='form-control' id='review' value={review.review} onChange={handleChange}/></div>
 
-                <div><label htmlFor='rating'>Give this Brewery a rating 1-5</label><input name='rating' type='number' className='form-control' id='rating' value={review.rating} onChange={handleChange}/></div>
-
+                <input name='rating' type='number' className='form-control' id='rating' value={review.rating} onChange={handleChange}/></div>
+            <div className='form-group'>
+                <label htmlFor='review'>Enter Your Review</label>
+   <input name='review' type='text' className='form-control' id='review' value={review.review} onChange={handleChange}/></div>
                 <div className='form-group'>
                     <button type='Submit' className='btn btn-success mr-3'>Submit</button>
                     <button type='Cancel' className='btn btn-danger' onClick={handleCancel}>Cancel</button>

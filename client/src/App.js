@@ -13,6 +13,8 @@ import jwtDecode from 'jwt-decode';
 import BeerForm from './components/BeerForm';
 import ReviewForm from './components/ReviewForm';
 
+import Review from './components/Review';
+
 import './index.css';
 import Login from './components/Login';
 import CreateAccount from './components/CreateAccount';
@@ -84,7 +86,7 @@ function App() {
             <Route exact path="/"><Home/></Route>
             <Route path="/BrewerySearch"><BrewerySearch/></Route>
             <Route exact path = "/Brewery"><Brewery/></Route>
-            <Route path = {["/Brewery/"]}><Singles/></Route>
+            <Route path = {"/Brewery/"}><Singles/></Route>
             <Route exact path="/error"><ServerError/></Route>
             <Route path="/Profile"><Profile/></Route>
             <Route path="/log-in"><Login/></Route>
@@ -92,6 +94,9 @@ function App() {
             <Route path="/visit-form"><VisitForm/></Route>
             <Route path="/beer-form"><BeerForm/></Route>
             <Route path="/writereview"><ReviewForm/></Route>
+
+            <Route path ="/Review"><Review/></Route>
+
           </Switch>
         </div>
 
