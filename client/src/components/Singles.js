@@ -1,16 +1,20 @@
 
 import Review from "./Review";
 import { useHistory, useLocation } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import './BrewPage.css';
+import AuthContext from "./AuthContext";
+import BreweryMap from "./BreweryMap";
 
 
 function Singles() {
-
+    const auth = useContext(AuthContext);
     const history = useHistory();
     const location = useLocation();
     const [brewery, setBrewery] = useState({});
     const [reviews, setReviews] = useState([]);
+    const randNum = Math.floor((Math.random(5)*5)+1);
+    const imgUrl = `/img/brew${randNum}.jpg`;
 
 
 
@@ -37,7 +41,7 @@ function Singles() {
             })
             .then(data => {
                 setBrewery(data);
-                console.log(brewery)
+        
             })
             .catch(err => console.log("Error:", err));
     },[]);
@@ -58,6 +62,7 @@ function Singles() {
         .catch(err => history.push('/error', {errorMessage: err}));
     
         },[])
+
     
 
    const handleAdd = ()=> history.push({
@@ -68,15 +73,34 @@ function Singles() {
 
     return(
         <>
-        <button type="button" className="btn btn-success m-3 mx-auto d-flex float-left" onClick={handleBack}>back to search</button>
-        <div>
-        <div>   
-          <h2>{brewery.name}</h2>
-          <h3>{reviews.rating}
-          <br/> {brewery.city}, {brewery.state}
-          <br/><a href = {brewery.website_url} target="_blank" rel="noreferrer">{brewery.website_url}</a></h3>  
-        </div>
-        {/*image (working on the webscraping) */}
+        
+        <br></br>
+        <div className="container">
+            <div className="row align-items-start">   
+            
+                <div className="col">
+                    <img src={process.env.PUBLIC_URL + imgUrl} ></img>
+                </div>
+                <div className="col info">
+                    <h1>{brewery.name}</h1>
+                    <br/>
+                    <a href = {brewery.website_url} target="_blank" rel="noreferrer">{brewery.website_url}</a>
+                    {auth.user && <button type="button" className="btn btn-sm btn-warning mr-3 float-right" onClick={handleLog}>Log Visit</button>}
+                    {auth.user && <button className="btn btn-sm btn-success float-right" onClick={handleAdd}>Add a review</button>  }
+                    <p>Phone: {brewery.phone}</p>
+                    <span>
+                        <p className="address">{brewery.street}</p>
+                        <h6 className="address">{brewery.city}, {brewery.state}</h6>
+                        <p className="address">{brewery.postal_code}</p>
+                    </span>
+                    <h3>{reviews.rating}
+                    <br/></h3>  
+                    
+                </div>  
+            </div>
+            <div>
+                    {brewery.longitude && <BreweryMap brewery={brewery}/>}
+                </div>
         </div>
         
        
@@ -85,15 +109,16 @@ function Singles() {
        {/*Are we still saving the ones the user has been to */}
        
     
-        <button type="button" className="btn btn-success mr-3" onClick={handleLog}>Log Visit</button>
+        
        
-        <div className="container">   
+        <div >   
         <h3>{brewery.name} Reviews</h3>
-            <button className="btn btn-sm btn-success float-right" onClick={handleAdd}>Add a review</button>  
+        
+        <br/>
         </div>
 
         <div className="reviewTable">
-                <table className="table table-striped">
+                <table className="table  table-bordered table-striped">
                   <thead><tr>
                   <th scope="col">Rating</th>
 
@@ -107,8 +132,8 @@ function Singles() {
            </tbody> 
                 </table>
               </div>
-        
-        
+              
+              <button type="button" className="btn btn-danger m-3 mx-auto d-flex " onClick={handleBack}>back to search</button>
         </>
         
         

@@ -15,4 +15,5 @@ background-color: goldenr;
 .map-container {
     height: 500px;
     justify-self: center;
+    margin-top: 5px;
     }
