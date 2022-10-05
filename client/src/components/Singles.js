@@ -60,7 +60,9 @@ function Singles() {
         },[])
     
 
-   const handleAdd = ()=> history.push('/writereview')
+   const handleAdd = ()=> history.push({
+            pathname: '/writereview' ,
+            state: {brewery: brewery}});
 
    
 
