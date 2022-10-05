@@ -45,7 +45,15 @@ function ReviewForm(){
 
 
         fetch('http://localhost:8080/review',init)
-        .then(resp => {if(resp.status===201 || resp.status===400){
+        .then(resp => {
+            if(resp.status===201){
+            history.push({ 
+                pathname: `/Brewery/${location.state.brewery.id}` ,
+                state: {breweryId: location.state.brewery.id}
+               });
+            return {};
+        }
+            else if(resp.status===400) {
             return resp.json;
         }
         return Promise.reject('Yikes, something went wrong.');
@@ -54,17 +62,17 @@ function ReviewForm(){
             if(body.id){
                 history.push({ 
                     pathname: `/Brewery/${location.state.brewery.id}` ,
-                    state: {brewery: location.state.brewery}
+                    state: {breweryId: location.state.brewery.id}
                    });
             }
             else{
                 setErrors(body);
             }}).catch(err=>history.push('/error',{errorMessage:err}));
 
-        history.push({ 
-            pathname: `/Brewery/${location.state.brewery.breweryId}` ,
-            state: {brewery: location.state.brewery}
-           });    
+        // history.push({ 
+        //     pathname: `/Brewery/${location.state.brewery.id}` ,
+        //     state: {breweryId: location.state.brewery.id}
+        //    });    
     }
     const ratingClick = (e) =>(
         e.preventDefault()
