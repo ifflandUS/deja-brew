@@ -1,6 +1,5 @@
-  import { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
-import Singles from "./Singles";
 
 
 
@@ -11,25 +10,6 @@ import Singles from "./Singles";
     const history = useHistory();
     
 
-    useEffect(( )=>{
-    
-    fetch(`http://localhost:8080/review/${brewery.id}`)
-    .then(resp =>{
-        if (resp.status != 200){
-          return Promise.reject('Oops...Something Happened.');
-        }
-        return resp.json();
-    })
-    .then(data =>{
-      if(data){
-        setReviews(data);
-        //brewery.reviews = reviews;
-      }
-    })
-    .catch(err => history.push('/error', {errorMessage: err}));
-
-    },[])
-
     
     const handleIndividual = () =>{
       history.push({ 
@@ -37,10 +17,10 @@ import Singles from "./Singles";
         state: {breweryId: brewery.id}
        });
         
-     }
+    }
      return(<>
     <tr>
-      <td>{brewery.name} <br/>* * * * *</td>
+      <td>{brewery.name} <br/>*****</td>
       <td>{brewery.country}</td>
       <td>{brewery.state}</td>
       <td>{brewery.city}</td>

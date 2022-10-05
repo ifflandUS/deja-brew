@@ -60,7 +60,9 @@ function Singles() {
         },[])
     
 
-   const handleAdd = ()=> history.push('/writereview')
+   const handleAdd = ()=> history.push({
+            pathname: '/writereview' ,
+            state: {brewery: brewery}});
 
    
 
@@ -94,7 +96,7 @@ function Singles() {
                 <table className="table table-striped">
                   <thead><tr>
                   <th scope="col">Rating</th>
-                  <th scope="col">Review</th>
+              <th scope="col">Review</th>
               
                   </tr></thead>
 
