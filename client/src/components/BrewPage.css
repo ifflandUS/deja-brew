@@ -1,6 +1,9 @@
 h3 {
     display: inline-block;
 }
+h1 {
+    display: inline-block;
+}
 a {
     color: #000;
     font-weight: bold;
@@ -11,4 +14,25 @@ a {
 a:hover{
     color: red;
     border-color: red;
+}
+
+.address{
+    margin-top: 1px;
+    margin-bottom: 1px;
+}
+
+.info{
+    margin-left: 1px;
+    border-width: 2px;
+}
+
+.col{
+    padding: 0px;
+}
+.container{
+    padding-right: 1px;
+}
+
+.btn-sm{
+    margin: 2px;
 }
