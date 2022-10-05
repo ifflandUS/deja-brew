@@ -32,7 +32,7 @@ export default function Visit({visit}) {
     return(
         <li className="list-group-item list-group-item-hover" onClick={handleClick} >
             <b>Date: </b>{visit.date} <b>Brewery: </b> {brewery.name} <b>Beers: </b>
-            {visit.beerList.map(beer => <span>{beer.beerName} </span>)}
+            {visit.beerList.map(beer => <span>|{beer.beerName}| </span>)}
                  
         </li>
     )

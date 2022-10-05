@@ -1,3 +1,14 @@
 h3 {
     display: inline-block;
 }
+a {
+    color: #000;
+    font-weight: bold;
+    border: #000;
+    border-radius: 2px;
+}
+
+a:hover{
+    color: red;
+    border-color: red;
+}

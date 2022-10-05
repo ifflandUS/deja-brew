@@ -8,7 +8,7 @@ import BeerForm from './BeerForm';
 
 mapboxgl.accessToken = 'pk.eyJ1IjoiaWZmbGFuZCIsImEiOiJjbDhvcWxneXUweWY4M3pvOHc0dXppNmprIn0.sOSxXUtdokO2Ubi_ViG1GQ';
 const API_KEY = "AIzaSyBMJLC9_22UyU322aYc95X4ZGayEqyR7Go";
-export default function BrewMap(){
+export default function BrewMap({breweryVisits}){
     const mapContainer = useRef(null);
     const map = useRef(null);
     const auth = useContext(AuthContext);
@@ -16,7 +16,7 @@ export default function BrewMap(){
     const [lng, setLng] = useState(-94.7071);
     const [lat, setLat] = useState(32.5625);
     const [zoom, setZoom] = useState(12);
-    const [breweryVisits, setBreweryVisits] = useState([]);
+    
 
     fetch("https://maps.googleapis.com/maps/api/geocode/json?address="+auth.user.zipCode+'&key='+API_KEY)
               .then(response => response.json())
@@ -32,27 +32,14 @@ export default function BrewMap(){
             )
             .catch()
 
+    const handleClick = (id) => {
+        history.push({ 
+            pathname: `/Brewery/${id}` ,
+            state: {breweryId: id}
+           });
+    }
+
     useEffect(() => {
-
-        const init = {
-            method: "GET",
-            headers: {
-                "Authorization": `Bearer ${auth.user.token}`
-            }};
-
-        fetch("http://localhost:8080/visit", init)
-            .then(resp => {
-                if (resp.status !== 200){
-                    return Promise.reject("[REDACTED] went wrong!");
-                }else {
-                    return resp.json();
-                }
-            })
-            .then(data => {
-                setBreweryVisits(data.map(visit => visit.breweryId))
-            })
-            .catch(err => console.log("Error:", err));
-    
     
         if (map.current) return; 
         map.current = new mapboxgl.Map({
@@ -76,10 +63,14 @@ export default function BrewMap(){
                         })
                     .setLngLat([data.at(i).longitude, data.at(i).latitude])
                     .setPopup(new mapboxgl.Popup()
-                                .setHTML(`<h2>${data.at(i).name}</h2>
-                                        <a href=${data.at(i).website_url}>${data.at(i).website_url}</a>`)
+                                .setHTML(`<h2 >${data.at(i).name}</h2>
+                                        <a href=${data.at(i).website_url}>Visit Web Page</a>`)
                                         )
                     .addTo(map.current);
+
+
+
+
                 } else{
                     const marker = new mapboxgl.Marker({
                         color: "#daa520",
@@ -87,10 +78,13 @@ export default function BrewMap(){
                         })
                     .setLngLat([data.at(i).longitude, data.at(i).latitude])
                     .setPopup(new mapboxgl.Popup()
-                                .setHTML(`<h2>${data.at(i).name}</h2>
-                                        <a href=${data.at(i).website_url}>${data.at(i).website_url}</a>`)
+                               .setHTML(`<h2 ">${data.at(i).name}</h2>
+                                        <a href=${data.at(i).website_url}>Visit Web Page</a>`)
                                         )
+                                        
                     .addTo(map.current);
+
+                    
                 }
               }
           }) 
