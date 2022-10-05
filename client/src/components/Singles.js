@@ -5,6 +5,8 @@ import { useState, useEffect } from "react";
 import './BrewPage.css';
 
 
+
+
 function Singles() {
 
     const history = useHistory();
@@ -17,9 +19,7 @@ function Singles() {
     const handleBack = ()=>{
         history.push(`/BrewerySearch`);
     }
-    const writeReview = (e) =>{
-        
-    }
+   
 
     const handleLog = ()=>{
         history.push({ 
@@ -59,9 +59,14 @@ function Singles() {
     
         },[])
     
+    const deleteReview = (reviewId) => {
+            const filteredReviews = reviews.filter(review => review.reviewId !== reviewId);
+            setReviews(filteredReviews);
+          }
+
 
    const handleAdd = ()=> history.push({
-            pathname: '/writereview' ,
+            pathname: '/review/add' ,
             state: {brewery: brewery}});
 
    
@@ -76,13 +81,11 @@ function Singles() {
           <br/> {brewery.city}, {brewery.state}
           <br/><a href = {brewery.website_url} target="_blank" rel="noreferrer">{brewery.website_url}</a></h3>  
         </div>
-        {/*image (working on the webscraping) */}
+        
         </div>
         
        
 
-       
-       {/*Are we still saving the ones the user has been to */}
        
     
         <button type="button" className="btn btn-success mr-3" onClick={handleLog}>Log Visit</button>
@@ -101,7 +104,7 @@ function Singles() {
                   </tr></thead>
 
               <tbody>
-           {reviews.map(review => <Review key={review.id} review={review} />)}
+           {reviews.map(review => <Review key={review.id} review={review} handleDelete={deleteReview} />)}
            </tbody> 
                 </table>
               </div>
