@@ -27,6 +27,15 @@ public class ReviewController {
         return new ResponseEntity<>(reviews, HttpStatus.OK);
     }
 
+    @GetMapping("/reviewId/{reviewId}")
+    public ResponseEntity<Review> findById(@PathVariable int reviewId, @RequestHeader(name = "authorization")AppUser user) {
+        Review review = service.findById(reviewId);
+        if (review == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return ResponseEntity.ok(review);
+    }
+
     @GetMapping("/app-user/{appUserId}")
     public ResponseEntity<?> findByUser(@RequestHeader(name = "authorization")AppUser appUser){
         List<Review> reviews = service.findByUser(appUser);

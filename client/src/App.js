@@ -93,8 +93,7 @@ function App() {
             <Route path="/create-account"><CreateAccount/></Route>
             <Route path="/visit-form"><VisitForm/></Route>
             <Route path="/beer-form"><BeerForm/></Route>
-            <Route path="/writereview"><ReviewForm/></Route>
-
+            <Route path={["/review/add","/review/update"]}><ReviewForm/></Route>
             <Route path ="/Review"><Review/></Route>
 
           </Switch>

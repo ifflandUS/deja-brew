@@ -4,6 +4,7 @@ import Brewery from './Brewery';
 
 
 
+
 function BrewerySearch(){
   
   const history = useHistory();
@@ -56,7 +57,7 @@ function BrewerySearch(){
                 <input className="search_input"
                 input="text" id="search" placeholder='search for breweries' onChange={handleChange}/>
                 
-                <button className="search_button">Search</button>
+                <button className="search_button">search</button>
                 </form>
                 </div>
 
