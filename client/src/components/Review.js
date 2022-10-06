@@ -60,10 +60,6 @@ function Review({review, handleDelete}){
 
       <td>{review.rating}</td>
       <td>{review.review}</td>
-      <td>
-        <button type="button" className="btn btn-success mr-3" onClick={handleEditClick} >edit </button>
-        <button type="button" className="btn btn-danger" onClick={handleDeleteClick}>delete</button>
-      </td>
       
     </tr>
     )

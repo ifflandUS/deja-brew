@@ -103,10 +103,11 @@ function Singles() {
                     <br/></h3>  
                     
                 </div>  
-            </div>
-            <div>
+                <div className="col">
                     {brewery.longitude && <BreweryMap brewery={brewery}/>}
                 </div>
+            </div>
+            
 
         </div>
         
