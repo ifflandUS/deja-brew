@@ -7,6 +7,8 @@ import AuthContext from "./AuthContext";
 import BreweryMap from "./BreweryMap";
 
 
+
+
 function Singles() {
     const auth = useContext(AuthContext);
     const history = useHistory();
@@ -21,9 +23,7 @@ function Singles() {
     const handleBack = ()=>{
         history.push(`/BrewerySearch`);
     }
-    const writeReview = (e) =>{
-        
-    }
+   
 
     const handleLog = ()=>{
         history.push({ 
@@ -64,15 +64,21 @@ function Singles() {
         },[])
 
     
+    const deleteReview = (reviewId) => {
+            const filteredReviews = reviews.filter(review => review.reviewId !== reviewId);
+            setReviews(filteredReviews);
+          }
+
 
    const handleAdd = ()=> history.push({
-            pathname: '/writereview' ,
+            pathname: '/review/add' ,
             state: {brewery: brewery}});
 
    
 
     return(
         <>
+
         
         <br></br>
         <div className="container">
@@ -101,12 +107,11 @@ function Singles() {
             <div>
                     {brewery.longitude && <BreweryMap brewery={brewery}/>}
                 </div>
+
         </div>
         
        
 
-       
-       {/*Are we still saving the ones the user has been to */}
        
     
         
@@ -128,7 +133,7 @@ function Singles() {
                   </tr></thead>
 
               <tbody>
-           {reviews.map(review => <Review key={review.id} review={review} />)}
+           {reviews.map(review => <Review key={review.id} review={review} handleDelete={deleteReview} />)}
            </tbody> 
                 </table>
               </div>
