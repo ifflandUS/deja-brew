@@ -19,7 +19,7 @@ function ReviewForm() {
 
     useEffect(() => {
         if (reviewId) {
-            fetch(`http://localhost:8080/review/reviewId/${reviewId}`)
+            fetch(`http://localhost:8080/review/${reviewId}`)
                 .then(resp => {
                     switch (resp.status) {
                         case 200:
@@ -85,7 +85,7 @@ function ReviewForm() {
 
 
     const updateReview = () => {
-        const updateReview = { id: reviewId, ...review };
+        const updateReview = { ...review };
 
         const init = {
             method: 'PUT',
@@ -148,6 +148,8 @@ function ReviewForm() {
 
         const fetchFunction = reviewId > 0 ? updateReview : saveReview;
         fetchFunction();
+
+
         history.push({
                     pathname: `/Brewery/${location.state.brewery.id}`,
                     state: { breweryId: location.state.brewery.id }
@@ -160,7 +162,7 @@ function ReviewForm() {
     })
 
     return (<>
-        <h2>{reviewId ? 'Update' : 'Add'} Review</h2>
+        <h2> Review</h2>
         {errors.length > 0 ? <Error errors={errors} /> : null}
         <form onSubmit={onSubmit}>
 
@@ -175,7 +177,8 @@ function ReviewForm() {
             <div className='form-group'>
                 <button type='Submit' className='btn btn-success mr-3'>Submit</button>
                 <button type='Cancel' className='btn btn-danger' onClick={handleCancel}>Cancel</button>
-            </div></form></>)
+            </div>
+            </form></>);
 }
 
 

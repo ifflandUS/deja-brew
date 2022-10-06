@@ -22,7 +22,7 @@ function Review({review, handleDelete}){
       "Authorization": `Bearer ${auth.user.token}`
     };
 
-    fetch(`http://localhost:8080/review/${review.reviewId}`, init)
+    fetch(`http://localhost:8080/review/delete/${review.reviewId}`, init)
     .then( resp => {
       switch(resp.status) {
         case 204:
@@ -38,7 +38,7 @@ function Review({review, handleDelete}){
       if (!resp) {
         //success
 
-        handleDelete(review.reviewId);
+        handleDelete(review);
       } else {
         console.log(resp);
       }
@@ -52,7 +52,7 @@ function Review({review, handleDelete}){
 
 
   const handleEditClick = () => history.push({
-      pathname:`/review/update`,
+      pathname:`/review/update/${review.reviewId}`,
       state: {review: review}});
   
 
