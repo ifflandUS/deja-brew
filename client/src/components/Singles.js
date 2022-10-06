@@ -101,11 +101,12 @@ function Singles() {
                     </span>
                     <h3>{reviews.rating}
                     <br/></h3>  
-                    
-                </div>  
+                </div> 
+            </div>
+            <div className="row">
                 <div className="col">
                     {brewery.longitude && <BreweryMap brewery={brewery}/>}
-                </div>
+                </div>      
             </div>
             
 
